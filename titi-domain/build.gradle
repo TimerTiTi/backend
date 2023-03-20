@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(":titi-common")
+}
+
+tasks.bootJar { enabled = false }
+tasks.jar { enabled = true }
