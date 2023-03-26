@@ -1,40 +1,62 @@
 buildscript {
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:3.0.4"
-		classpath "io.spring.gradle:dependency-management-plugin:1.1.0.RELEASE"
-	}
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.0.4"
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.0.RELEASE"
+        classpath "org.ec4j.editorconfig:org.ec4j.editorconfig.gradle.plugin:0.0.3"
+    }
 }
 
 subprojects {
-	apply plugin: 'java-library'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.ec4j.editorconfig'
+    apply plugin: 'checkstyle'
 
-	group = 'com.titi'
-	version = '0.0.1-SNAPSHOT'
+    group = 'com.titi'
+    version = '0.0.1-SNAPSHOT'
 
-	repositories {
-		mavenCentral()
-	}
+    editorconfig {
+        excludes = ['build']
+    }
 
-	sourceCompatibility = '17' // Java 소스 레벨 제어
-	targetCompatibility = '17' // Java 컴파일 버전 제어
+    checkstyle {
+        maxWarnings = 0 // 코드 컨벤션 어길 시, 빌드 실패
+        configFile = file("${rootDir}/titi-checkstyle-rules.xml")
+        configProperties = ["suppressionFile": "${rootDir}/titi-checkstyle-suppressions.xml"]
+        toolVersion = "9.2"
+    }
 
-	tasks.named('test') {
-		useJUnitPlatform()
-	}
+    check.dependsOn editorconfigCheck
 
-	configurations {
-		compileOnly { // 컴파일 시에만 사용되는 종속성 정의
-			extendsFrom annotationProcessor // 컴파일 시에만 필요한 어노테이션 프로세스를 포험하는 종속성 그룹
-		} // 프로젝트 빌드 최적화 및 불필요한 종속성 제거를 통해 빌드 시간 단축 가능
-	}
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
 
-	dependencies {
-		compileOnly 'org.projectlombok:lombok'
-		annotationProcessor 'org.projectlombok:lombok'
-	}
+    repositories {
+        mavenCentral()
+    }
+
+    sourceCompatibility = '17' // Java 소스 레벨 제어
+    targetCompatibility = '17' // Java 컴파일 버전 제어
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+
+    configurations {
+        compileOnly { // 컴파일 시에만 사용되는 종속성 정의
+            extendsFrom annotationProcessor // 컴파일 시에만 필요한 어노테이션 프로세스를 포험하는 종속성 그룹
+        } // 프로젝트 빌드 최적화 및 불필요한 종속성 제거를 통해 빌드 시간 단축 가능
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
