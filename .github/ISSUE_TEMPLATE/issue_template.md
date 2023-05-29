@@ -10,8 +10,13 @@ assignees: ''
 <!--
 [제목] title (개발소요 예상시간) ex) 소셜 로그인 기능 추가 (3h)
 -->
-### 배경
+## Background
 
----
+## AC
+| Given   | When  | Then  |
+|:--------|:------|:------|
+| (조건,상황) | (행동)  | (결과)  |
 
-### 요구사항
+## In scope
+
+## Out of Scope
