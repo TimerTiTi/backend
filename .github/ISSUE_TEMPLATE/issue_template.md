@@ -10,6 +10,10 @@ assignees: ''
 <!--
 [제목] title (개발소요 예상시간) ex) 소셜 로그인 기능 추가 (3h)
 -->
+## Prerequisite
+
+## Related
+
 ## Background
 
 ## AC
