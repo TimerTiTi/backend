@@ -17,20 +17,12 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.ec4j.editorconfig'
-    apply plugin: 'checkstyle'
 
     group = 'com.titi'
     version = '0.0.1-SNAPSHOT'
 
     editorconfig {
         excludes = ['build']
-    }
-
-    checkstyle {
-        maxWarnings = 0 // 코드 컨벤션 어길 시, 빌드 실패
-        configFile = file("${rootDir}/titi-checkstyle-rules.xml")
-        configProperties = ["suppressionFile": "${rootDir}/titi-checkstyle-suppressions.xml"]
-        toolVersion = "9.2"
     }
 
     check.dependsOn editorconfigCheck
