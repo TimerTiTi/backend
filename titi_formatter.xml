@@ -16,9 +16,9 @@
                 <emptyLine/>
                 <package name="net" withSubpackages="true" static="false"/>
                 <emptyLine/>
-                <package name="com.titi" withSubpackages="true" static="false"/>
-                <emptyLine/>
                 <package name="" withSubpackages="true" static="false"/>
+                <emptyLine/>
+                <package name="com.titi" withSubpackages="true" static="false"/>
                 <emptyLine/>
                 <emptyLine/>
             </value>
