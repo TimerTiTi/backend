@@ -1,6 +1,6 @@
 dependencies {
-    api(project(":titi-common"))
-    api(project(":titi-domain"))
+    implementation project(":titi-common")
+    implementation project(":titi-domain")
 }
 
 tasks.bootJar { enabled = false }
