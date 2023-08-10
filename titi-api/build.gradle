@@ -1,5 +1,7 @@
 dependencies {
-    api project(":titi-adapter")
+    implementation project(":titi-adapter")
+    implementation project(":titi-common")
+    implementation project(":titi-domain")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
