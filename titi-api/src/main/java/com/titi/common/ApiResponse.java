@@ -1,18 +1,20 @@
 package com.titi.common;
 
+import com.titi.common.ApiConstants.Common;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-@ApiModel(description = ApiConstants.Common.Model.DESCRIPTION)
+@ApiModel(description = Common.RESPONSE_DESCRIPTION)
 @Getter
 public abstract class ApiResponse {
 
-	@ApiModelProperty(position = 1, value = ApiConstants.Common.Property.VALUE1, example = ApiConstants.Common.Property.EXAMPLE1)
+	@ApiModelProperty(position = 1, value = Common.RESPONSE_PROPERTY_DESCRIPTION1, example = Common.RESPONSE_PROPERTY_EXAMPLE1)
 	private final int status;
-	@ApiModelProperty(position = 2, value = ApiConstants.Common.Property.VALUE2, example = ApiConstants.Common.Property.EXAMPLE2)
+	@ApiModelProperty(position = 2, value = Common.RESPONSE_PROPERTY_DESCRIPTION2, example = Common.RESPONSE_PROPERTY_EXAMPLE2)
 	private final String code;
-	@ApiModelProperty(position = 3, value = ApiConstants.Common.Property.VALUE3, example = ApiConstants.Common.Property.EXAMPLE3)
+	@ApiModelProperty(position = 3, value = Common.RESPONSE_PROPERTY_DESCRIPTION3, example = Common.RESPONSE_PROPERTY_EXAMPLE3)
 	private final String message;
 
 	public ApiResponse(ApiCodes.Result resultCode) {
