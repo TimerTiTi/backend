@@ -104,9 +104,9 @@ public class ControllerExceptionHandler {
 	 * <b>Business logic</b>에서 발생하는 모든 예외 처리
 	 */
 	@ExceptionHandler
-	protected ResponseEntity<ErrorResponse> handleBusinessException(TiTiException e) {
+	protected ResponseEntity<ErrorResponse> handleTiTiException(TiTiException e) {
 		final ApiCodes.ErrorCode errorCode = e.getErrorCode();
-		final ErrorResponse response = ErrorResponse.of(errorCode);
+		final ErrorResponse response = ErrorResponse.of(errorCode, e.getErrors());
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
