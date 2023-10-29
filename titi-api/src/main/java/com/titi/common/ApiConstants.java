@@ -47,7 +47,9 @@ public final class ApiConstants {
 			public static final String RESPONSE_MODEL_DESCRIPTION = "";
 			public static final String RESPONSE_PARAM_DESCRIPTION1 = "";
 			public static final String RESPONSE_PARAM_EXAMPLE1 = "";
+
 		}
+
 	}
 
 }

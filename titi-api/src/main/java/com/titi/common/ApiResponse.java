@@ -17,16 +17,10 @@ public abstract class ApiResponse {
 	@ApiModelProperty(position = 3, value = Common.RESPONSE_PROPERTY_DESCRIPTION3, example = Common.RESPONSE_PROPERTY_EXAMPLE3)
 	private final String message;
 
-	public ApiResponse(ApiCodes.Result resultCode) {
+	public ApiResponse(ApiCodes.ResultCode resultCode) {
 		this.status = resultCode.getStatus();
 		this.code = resultCode.getCode();
 		this.message = resultCode.getMessage();
-	}
-
-	public ApiResponse(ApiCodes.Error errorCode) {
-		this.status = errorCode.getStatus();
-		this.code = errorCode.getCode();
-		this.message = errorCode.getMessage();
 	}
 
 }
