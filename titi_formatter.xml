@@ -20,7 +20,6 @@
                 <emptyLine/>
                 <package name="com.titi" withSubpackages="true" static="false"/>
                 <emptyLine/>
-                <emptyLine/>
             </value>
         </option>
         <option name="ENABLE_JAVADOC_FORMATTING" value="false"/>
