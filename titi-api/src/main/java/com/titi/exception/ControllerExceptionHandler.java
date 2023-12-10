@@ -1,6 +1,6 @@
 package com.titi.exception;
 
-import static com.titi.common.ApiCodes.*;
+import static com.titi.common.ResponseCodes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +20,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-import com.titi.common.ApiCodes;
-import com.titi.common.Constants;
-import com.titi.exception.ErrorResponse.FieldError;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+
+import com.titi.common.Constants;
+import com.titi.common.ResponseCodes;
+import com.titi.exception.ErrorResponse.FieldError;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
 	/**
 	 * <b>@Validated</b>에 의해 발생하는 <b>Bean Validation</b> 예외 처리<br>
+	 *
 	 * @see <a href="https://medium.com/javarevisited/are-you-using-valid-and-validated-annotations-wrong-b4a35ac1bca4">@Valid vs @Validated</a>
 	 */
 	@ExceptionHandler
@@ -42,6 +43,7 @@ public class ControllerExceptionHandler {
 
 	/**
 	 * <b>@Valid</b>에 의해 발생하는 <b>Bean Validation</b> 예외 처리
+	 *
 	 * @see <a href="https://medium.com/javarevisited/are-you-using-valid-and-validated-annotations-wrong-b4a35ac1bca4">@Valid vs @Validated</a>
 	 */
 	@ExceptionHandler
@@ -52,6 +54,7 @@ public class ControllerExceptionHandler {
 
 	/**
 	 * <b>@ModelAttribute</b> 바인딩 실패 예외 처리
+	 *
 	 * @see <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args">@ModelAttribute</a>
 	 */
 	@ExceptionHandler
@@ -105,7 +108,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleTiTiException(TiTiException e) {
-		final ApiCodes.ErrorCode errorCode = e.getErrorCode();
+		final ResponseCodes.ErrorCode errorCode = e.getErrorCode();
 		final ErrorResponse response = ErrorResponse.of(errorCode, e.getErrors());
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}

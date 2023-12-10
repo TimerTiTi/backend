@@ -3,7 +3,7 @@ package com.titi.exception;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.titi.common.ApiCodes;
+import com.titi.common.ResponseCodes;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,25 +17,25 @@ public class ErrorResponse {
 	private final String message;
 	private final List<FieldError> errors;
 
-	private ErrorResponse(ApiCodes.ErrorCode errorCode, List<FieldError> errors) {
+	private ErrorResponse(ResponseCodes.ErrorCode errorCode, List<FieldError> errors) {
 		this.status = errorCode.getStatus();
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = errors;
 	}
 
-	private ErrorResponse(ApiCodes.ErrorCode errorCode) {
+	private ErrorResponse(ResponseCodes.ErrorCode errorCode) {
 		this.status = errorCode.getStatus();
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = new ArrayList<>();
 	}
 
-	public static ErrorResponse of(final ApiCodes.ErrorCode errorCode) {
+	public static ErrorResponse of(final ResponseCodes.ErrorCode errorCode) {
 		return new ErrorResponse(errorCode);
 	}
 
-	public static ErrorResponse of(final ApiCodes.ErrorCode errorCode, final List<FieldError> errors) {
+	public static ErrorResponse of(final ResponseCodes.ErrorCode errorCode, final List<FieldError> errors) {
 		return new ErrorResponse(errorCode, errors);
 	}
 
@@ -59,7 +59,7 @@ public class ErrorResponse {
 			return fieldErrors;
 		}
 
-		public static List<FieldError> of(String field, String value, ApiCodes.ErrorCode errorCode) {
+		public static List<FieldError> of(String field, String value, ResponseCodes.ErrorCode errorCode) {
 			final List<FieldError> fieldErrors = new ArrayList<>();
 			fieldErrors.add(new FieldError(field, value, errorCode.getMessage()));
 			return fieldErrors;

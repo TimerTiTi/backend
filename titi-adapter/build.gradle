@@ -1,13 +1,7 @@
 dependencies {
-    implementation project(":titi-data")
-    implementation project(":titi-application")
-    implementation project(":titi-common")
-    implementation project(":titi-domain")
+    api project(":titi-data")
+    api project(":titi-application")
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

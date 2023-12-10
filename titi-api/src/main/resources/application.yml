@@ -1,0 +1,6 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+jwt:
+  secret-key: abcdefghijklmnopqrstuwxzy0123456
