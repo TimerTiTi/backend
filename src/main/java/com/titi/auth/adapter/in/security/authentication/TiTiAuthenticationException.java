@@ -1,6 +1,7 @@
 package com.titi.auth.adapter.in.security.authentication;
 
-import java.util.ArrayList;
+import static com.titi.common.constant.ResponseCodes.ErrorCode.*;
+
 import java.util.List;
 
 import org.springframework.security.core.AuthenticationException;
@@ -13,19 +14,12 @@ import com.titi.common.dto.ErrorResponse.FieldError;
 @Getter
 public class TiTiAuthenticationException extends AuthenticationException {
 
-	private final ErrorCode errorCode;
+	private final ErrorCode errorCode = AUTHENTICATION_FAILURE;
 	private final List<FieldError> errors;
 
-	public TiTiAuthenticationException(ErrorCode errorCode, List<FieldError> errors) {
-		super(errorCode.getMessage());
-		this.errorCode = errorCode;
+	public TiTiAuthenticationException(List<FieldError> errors) {
+		super(AUTHENTICATION_FAILURE.getMessage());
 		this.errors = errors;
-	}
-
-	public TiTiAuthenticationException(ErrorCode errorCode) {
-		super(errorCode.getMessage());
-		this.errorCode = errorCode;
-		this.errors = new ArrayList<>();
 	}
 
 }

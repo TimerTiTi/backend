@@ -1,7 +1,6 @@
 package com.titi.auth.adapter.in.security.authentication.jwt;
 
 import static com.titi.common.constant.Constants.*;
-import static com.titi.common.constant.ResponseCodes.ErrorCode.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,10 +57,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	private void validateAuthorizationHeader(String authorizationHeader) {
 		if (authorizationHeader == null) {
 			final List<FieldError> errors = FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, EMPTY, "Authorization header must not be null.");
-			throw new TiTiAuthenticationException(AUTHENTICATION_FAILURE, errors);
+			throw new TiTiAuthenticationException(errors);
 		} else if (!authorizationHeader.startsWith(TOKEN_PREFIX)) {
 			final List<FieldError> errors = FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, authorizationHeader, "Authorization header prefix is invalid.");
-			throw new TiTiAuthenticationException(AUTHENTICATION_FAILURE, errors);
+			throw new TiTiAuthenticationException(errors);
 		}
 	}
 

@@ -1,9 +1,7 @@
 package com.titi.auth.adapter.in.security.authentication.jwt;
 
-import static com.titi.common.constant.ResponseCodes.ErrorCode.*;
-import static java.util.stream.Collectors.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -17,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 import com.titi.auth.adapter.in.security.authentication.TiTiAuthenticationException;
 import com.titi.auth.adapter.in.security.constant.SecurityConstants;
-import com.titi.common.dto.ErrorResponse;
 import com.titi.auth.application.util.JwtUtils;
+import com.titi.common.dto.ErrorResponse.FieldError;
 
 @Component
 @RequiredArgsConstructor
@@ -35,8 +33,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 			final Long memberId = Long.valueOf(payloads.getSubject());
 			return JwtAuthenticationToken.of(memberId, jwt, getAuthorities(payloads));
 		} catch (JwtException e) {
-			final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, jwt, e.getMessage());
-			throw new TiTiAuthenticationException(AUTHENTICATION_FAILURE, errors);
+			final List<FieldError> errors = FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, jwt, e.getMessage());
+			throw new TiTiAuthenticationException(errors);
 		}
 	}
 
@@ -50,7 +48,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		final List<String> authorities = (List<String>)payloads.get(JwtUtils.CLAIM_AUTHORITIES);
 		return authorities.stream()
 			.map(SimpleGrantedAuthority::new)
-			.collect(toList());
+			.collect(Collectors.toList());
 	}
 
 	// TODO - implement
