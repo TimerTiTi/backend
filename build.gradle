@@ -1,54 +1,53 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:3.0.4"
-        classpath "io.spring.gradle:dependency-management-plugin:1.1.0.RELEASE"
-        classpath "org.ec4j.editorconfig:org.ec4j.editorconfig.gradle.plugin:0.0.3"
-    }
+plugins {
+    id 'org.springframework.boot' version '3.1.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'org.ec4j.editorconfig' version '0.0.3'
 }
 
-subprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.ec4j.editorconfig'
+group = 'com.titi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '21' // Java Source Level Control
+targetCompatibility = '21' // Java Compilation Version Control
 
-    group = 'com.titi'
-    version = '0.0.1-SNAPSHOT'
+editorconfig {
+    excludes = ['build']
+}
+check.dependsOn editorconfigCheck
 
-    editorconfig {
-        excludes = ['build']
-    }
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
-    check.dependsOn editorconfigCheck
+configurations {
+    compileOnly { // Compile-time Only Dependency Definition
+        extendsFrom annotationProcessor // Dependency Group Inclusive of Compile-Time Only Annotation Processing
+    } // Optimizing project builds and reducing build times by removing unnecessary dependencies
+}
 
-    compileJava.options.encoding = 'UTF-8'
-    compileTestJava.options.encoding = 'UTF-8'
+repositories {
+    mavenCentral()
+}
 
-    repositories {
-        mavenCentral()
-    }
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    sourceCompatibility = '17' // Java 소스 레벨 제어
-    targetCompatibility = '17' // Java 컴파일 버전 제어
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "io.springfox:springfox-swagger-ui:3.0.0"
 
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-    configurations {
-        compileOnly { // 컴파일 시에만 사용되는 종속성 정의
-            extendsFrom annotationProcessor // 컴파일 시에만 필요한 어노테이션 프로세스를 포험하는 종속성 그룹
-        } // 프로젝트 빌드 최적화 및 불필요한 종속성 제거를 통해 빌드 시간 단축 가능
-    }
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-    dependencies {
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-    }
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
 }

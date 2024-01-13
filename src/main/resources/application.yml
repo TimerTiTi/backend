@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  profiles:
+    include: core
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+jwt:
+  secret-key: abcdefghijklmnopqrstuwxzy0123456

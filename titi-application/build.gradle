@@ -1,7 +1,0 @@
-dependencies {
-    implementation project(":titi-common")
-    implementation project(":titi-domain")
-}
-
-tasks.bootJar { enabled = false }
-tasks.jar { enabled = true }
