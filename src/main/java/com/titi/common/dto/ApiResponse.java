@@ -1,7 +1,7 @@
 package com.titi.common.dto;
 
 import com.titi.common.constant.ApiConstants.Common;
-import com.titi.common.constant.ResponseCodes.SuccessCode;
+import com.titi.common.constant.ResponseCodes.ResultCode;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,10 +18,10 @@ public abstract class ApiResponse {
 	@ApiModelProperty(position = 3, value = Common.RESPONSE_PROPERTY_DESCRIPTION3, example = Common.RESPONSE_PROPERTY_EXAMPLE3)
 	private final String message;
 
-	public ApiResponse(SuccessCode successCode) {
-		this.status = successCode.getStatus();
-		this.code = successCode.getCode();
-		this.message = successCode.getMessage();
+	public ApiResponse(ResultCode resultCode) {
+		this.status = resultCode.getStatus();
+		this.code = resultCode.getCode();
+		this.message = resultCode.getMessage();
 	}
 
 }
