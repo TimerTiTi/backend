@@ -13,13 +13,15 @@ public class JwtUtils {
 
 	public static final String TOKEN_TYPE = "Bearer";
 	public static final String CLAIM_AUTHORITIES = "aut";
+	private final String secretKey;
 
-	@Value("${jwt.secret-key}")
-	private String SECRET_KEY;
+	public JwtUtils(@Value("${jwt.secret-key}") String secretKey) {
+		this.secretKey = secretKey;
+	}
 
 	public Claims getPayloads(String jwt) throws JwtException {
 		return (Claims)Jwts.parser()
-			.verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+			.verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
 			.build()
 			.parse(jwt)
 			.getPayload();

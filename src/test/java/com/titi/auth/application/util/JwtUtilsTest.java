@@ -3,19 +3,16 @@ package com.titi.auth.application.util;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-@SpringBootTest
 class JwtUtilsTest {
 
-	@Autowired
-	private JwtUtils jwtUtils;
+	// @Autowired
 	private final static String SECRET_KEY = "abcdefghijklmnopqrstuwxzy0123456";
+	private final JwtUtils jwtUtils = new JwtUtils(SECRET_KEY);
 
 	@Test
 	void testGetPayLoads() {
