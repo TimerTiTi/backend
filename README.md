@@ -1,15 +1,23 @@
 # TiTi Backend
-티티 백엔드
 
 ## Links
-|            | url     |
-|------------|---------|
-| dev docs   | (추가 예정) |
+
+| name     | url           |
+|----------|---------------|
+| dev docs | (To be added) |
 
 ## Getting Started
 
-### Env
-- [JDK 17](https://github.com/TimerTiTi/backend/wiki/JDK-17%EB%A1%9C-%EC%97%85%EA%B7%B8%EB%A0%88%EC%9D%B4%EB%93%9C-%ED%95%98%EA%B8%B0)
+### Development Environment
+
+- [JDK 21](https://openjdk.org/projects/jdk/21/)
+- [Spring Boot 3.1.4](https://spring.io/blog/2023/09/21/spring-boot-3-1-4-available-now/)
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa/)
+    - [Hibernate 6.2.17.Final](https://hibernate.org/orm/releases/6.2/)
+- [Spring Security 6.1.4](https://docs.spring.io/spring-security/reference/6.1/index.html)
+- [Swagger 3.0](https://swagger.io/specification/)
+- [MySQL 8.0](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/)
+- [Gradle 8.5](https://docs.gradle.org/8.5/release-notes.html)
 
 ### Setting local environment
 
@@ -17,21 +25,70 @@
 $ docker-compose up && docker-compose rm -fsv
 ```
 
-## 프로젝트 구성
+## Project Configuration
+
+### Hexagonal Architecture
+
+![hexagonal_architecture.png](hexagonal_architecture.png)
+```
+├── 📂titi-adapter     ▶️ Adapter module that implements specific operations that go outside the system
+│     ├── 📂 in
+│     └── 📂 out
+├── 📂titi-application ▶️ A module that is responsible for domain access and business logic and provides in and out ports
+│     ├── 📂 in
+│     └── 📂 out
+└── 📂titi-domain      ▶️ Domain Module
+```
+### TiTi Architecture
 
 ```
-.
-├── .github                     # Github Template
-├── titi-adapter                # 시스템 외부로 나가는 구체적인 동작을 구현한 어댑터 모듈
-├── titi-api                    # TiTi API 애플리케이션 모듈
-├── titi-application            # 도메인에 접근, 비즈니스 로직 등을 담당하며 in, out 포트를 제공하는 모듈
-├── titi-common                 # 공통으로 사용되는 코드와 유틸리티를 모아둔 모듈
-├── titi-data                   # 데이터 저장을 위해 Jpa 구현체를 모아둔 모듈
-├── titi-domain                 # 토큰, 알림 등 도메인 모듈
-├── sql                         # titi DB 스키마 관리용
-├── docker-compose.yml          # Mysql 로컬 환경 구성을 위한 스크립트
-├── build.gradle
-├── settings.gradle
-├── versions.properties
-└── README.md
+└──🔹titi-backend
+      ├──📂.github ▶️ Github Template
+      ├──📂sql ▶️ TITI Local DB Schema Management
+      ├──📂src/main/java/com/titi
+      │     ├── 📂auth ▶️ Authentication/Authorization Module
+      │     │     ├── 📂adapter
+      │     │     │     ├── 📂in
+      │     │     │     │     ├── 📂security
+      │     │     │     │     │     ├── 📂authentication
+      │     │     │     │     │     │     └── 📂jwt
+      │     │     │     │     │     ├── 📂config
+      │     │     │     │     │     ├── 📂constant
+      │     │     │     │     │     └── 📂matcher
+      │     │     │     │     ├── 📂web
+      │     │     │     │     └── 📂internal
+      │     │     │     └── 📂out
+      │     │     │     │     ├── 📂cache
+      │     │     │     │     └── 📂persistence
+      │     │     │     │     │     └── 📂jpa
+      │     │     │     │     │     │     ├── 📂entity
+      │     │     │     │     │     │     └── 📂repository
+      │     │     ├── 📂application
+      │     │     │     ├── 📂service
+      │     │     │     ├── 📂in
+      │     │     │     ├── 📂out
+      │     │     │     └── 📂util
+      │     │     └── 📂domain
+      │     ├── 📂common ▶️ Common Module
+      │     │     ├── 📂constant
+      │     │     ├── 📂dto
+      │     │     └── 📂exception
+      │     ├── 📂crypto ▶️ Encryption/decryption Library
+      │     │     ├── 📂constant
+      │     │     ├── 📂exception
+      │     │     └── 📂uitl
+      │     └── 📂infrastructure ▶️ Infrastructure Configuration Package
+      │     │     ├── 📂cache
+      │     │     │     └── 📂config
+      │     │     └── 📂persistence
+      │     │     │     ├── 📂config
+      │     │     │     └── 📂entity
+      ├──⚙️.editorconfig
+      ├──📄.gitattributes
+      ├──📄.gitignore
+      ├──🐘build.gradle
+      ├──🐳docker-compose.yml ▶️ Script for configuring MySQL local environment
+      ├──📄README.md
+      ├──🐘settings.gradle
+      └──📜titi_formatter.xml ▶️ TiTi Java Code Formatter
 ```
