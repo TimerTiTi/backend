@@ -3,13 +3,32 @@ server:
   shutdown: graceful
 
 spring:
-  profiles:
-    include: core
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+
 ---
 spring:
   config:
     activate:
       on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/titi?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+
+logging:
+  level:
+    root: debug
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
 
 jwt:
   secret-key: abcdefghijklmnopqrstuwxzy0123456
