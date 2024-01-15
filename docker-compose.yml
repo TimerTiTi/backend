@@ -1,11 +1,11 @@
 version: '3.7'
 
 services:
-  titi:
+  titi-mysql:
     image: mysql:8.0
     restart: always
     command: --lower_case_table_names=1
-    container_name: mysql-local
+    container_name: titi-mysql-local
     environment:
       - MYSQL_DATABASE=titi
       - MYSQL_ROOT_PASSWORD=1234
@@ -15,3 +15,16 @@ services:
       - "./sql/titi.sql:/docker-entrypoint-initdb.d/1.sql"
       - "./sql/titi_data.sql:/docker-entrypoint-initdb.d/2.sql"
     platform: linux/x86_64
+  titi-redis:
+    image: redis:alpine
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf
+    container_name: titi-redis-local
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./redis/data:/data"
+      - "./redis/conf/redis.conf:/usr/local/conf/redis.conf"
