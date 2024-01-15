@@ -32,13 +32,14 @@ $ docker-compose up && docker-compose rm -fsv
 
 ![hexagonal_architecture.png](hexagonal_architecture.png)
 ```
-├── 📂titi-adapter     ▶️ Adapter module that implements specific operations that go outside the system
+├── 📂adapter     ▶️ Adapter module that implements specific operations that go outside the system
 │     ├── 📂 in
 │     └── 📂 out
-├── 📂titi-application ▶️ A module that is responsible for domain access and business logic and provides in and out ports
+├── 📂application ▶️ A module that is responsible for domain access and business logic and provides in and out ports
+│     ├── 📂 service
 │     ├── 📂 in
 │     └── 📂 out
-└── 📂titi-domain      ▶️ Domain Module
+└── 📂domain      ▶️ Domain Module
 ```
 ### TiTi Architecture
 
