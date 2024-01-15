@@ -16,6 +16,7 @@
     - [Hibernate 6.2.17.Final](https://hibernate.org/orm/releases/6.2/)
 - [Spring Security 6.1.4](https://docs.spring.io/spring-security/reference/6.1/index.html)
 - [Swagger 3.0](https://swagger.io/specification/)
+- [JUnit 5.9.3](https://junit.org/junit5/docs/5.9.3/release-notes/)
 - [MySQL 8.0](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/)
 - [Gradle 8.5](https://docs.gradle.org/8.5/release-notes.html)
 
@@ -59,6 +60,9 @@ $ docker-compose up && docker-compose rm -fsv
       │     │     │     │     └── 📂internal
       │     │     │     └── 📂out
       │     │     │     │     ├── 📂cache
+      │     │     │     │     │     └── 📂redis
+      │     │     │     │     │     │     ├── 📂entity
+      │     │     │     │     │     │     └── 📂repository
       │     │     │     │     └── 📂persistence
       │     │     │     │     │     └── 📂jpa
       │     │     │     │     │     │     ├── 📂entity
@@ -79,7 +83,8 @@ $ docker-compose up && docker-compose rm -fsv
       │     │     └── 📂uitl
       │     └── 📂infrastructure ▶️ Infrastructure Configuration Package
       │     │     ├── 📂cache
-      │     │     │     └── 📂config
+      │     │     │     └── 📂redis
+      │     │     │     │     └── 📂config
       │     │     └── 📂persistence
       │     │     │     ├── 📂config
       │     │     │     └── 📂entity
