@@ -17,12 +17,12 @@ public record Notification(
 	LocalDateTime notifiedAt
 ) {
 
-	public static Notification ofEmail(NotificationCategory notificationCategory, String encryptedEmail, ServiceInfo serviceInfo) {
+	public static Notification ofEmail(NotificationCategory notificationCategory, String email, ServiceInfo serviceInfo) {
 		return Notification.builder()
 			.notificationId(UidUtils.generateUid())
 			.notificationCategory(notificationCategory)
 			.notificationType(NotificationType.EMAIL)
-			.targetInfo(new TargetInfo.EmailTargetInfo(encryptedEmail))
+			.targetInfo(new TargetInfo.EmailTargetInfo(email))
 			.serviceInfo(serviceInfo)
 			.build();
 	}
