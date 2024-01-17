@@ -57,3 +57,28 @@ CREATE TABLE IF NOT EXISTS oauth2_infos
     CONSTRAINT fk_oauth2_infos_member_id FOREIGN KEY (member_id) REFERENCES members(id),
     UNIQUE INDEX uix_oauth2_infos_provider_id (provider, provider_id)
 ) COMMENT 'OAuth2 정보';
+
+CREATE TABLE IF NOT EXISTS notifications
+(
+    uid                    BIGINT NOT NULL,
+    notification_category  ENUM ('INFORMATION', 'NOTICE', 'MARKETING', 'AUTHENTICATION') NOT NULL COMMENT '알림 종류',
+    notification_type      ENUM ('EMAIL') NOT NULL COMMENT '알림 유형',
+    notification_status    ENUM ('COMPLETED', 'FAILED') NOT NULL COMMENT '알림 상태',
+    target_type            ENUM ('EMAIL') NOT NULL COMMENT '수신 유형',
+    target_value           VARCHAR(255) NOT NULL COMMENT '수신자 정보',
+    service_name           ENUM ('AUTH')  NOT NULL COMMENT '서비스명',
+    service_request_id     VARCHAR(50) NOT NULL COMMENT '서비스 요청 ID',
+    notified_at            DATETIME(6) NULL COMMENT '발송 일시',
+    created_at             DATETIME(6) NOT NULL COMMENT '생성 일시',
+    updated_at             DATETIME(6) NOT NULL COMMENT '수정 일시',
+    PRIMARY KEY (uid)
+) COMMENT '알림';
+
+CREATE TABLE IF NOT EXISTS notification_histories
+(
+    uid                 BIGINT NOT NULL,
+    notification_id     BIGINT NOT NULL COMMENT '알림 PK',
+    notification_status ENUM ('REQUESTED', 'COMPLETED', 'FAILED') NOT NULL COMMENT '알림 상태',
+    created_at          datetime(6) NOT NULL COMMENT '생성 일시',
+    PRIMARY KEY (uid)
+) COMMENT '알림 이력';

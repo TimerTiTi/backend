@@ -1,0 +1,34 @@
+spring:
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/titi?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${TITI_SMTP_GMAIL_TEST_USERNAME}
+    password: ${TITI_SMTP_GMAIL_TEST_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+jwt:
+  secret-key: abcdefghijklmnopqrstuwxzy0123456
+
+crypto:
+  secret-key: 12345678901234567890123456789012
