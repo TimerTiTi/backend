@@ -1,5 +1,7 @@
 package com.titi.titi_auth.adapter.in.security.authentication;
 
+import static com.titi.library.titi_common.constant.ResponseCodes.ErrorCode.*;
+
 import java.util.List;
 
 import org.springframework.security.core.AuthenticationException;
