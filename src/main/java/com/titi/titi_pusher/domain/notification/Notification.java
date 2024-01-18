@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import lombok.Builder;
 
-import com.titi.library.titi_common.util.UidUtils;
+import com.titi.titi_common_lib.util.UidUtils;
 
 @Builder(toBuilder = true)
 public record Notification(

@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.titi.library.titi_crypto.util.CryptoUtils;
+import com.titi.titi_crypto_lib.util.CryptoUtils;
 import com.titi.titi_pusher.data.jpa.entity.NotificationEntity;
 import com.titi.titi_pusher.data.jpa.entity.NotificationHistoryEntity;
 import com.titi.titi_pusher.domain.notification.Notification;

@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import com.titi.library.titi_common.util.UidUtils;
-import com.titi.library.titi_crypto.util.CryptoUtils;
+import com.titi.titi_common_lib.util.UidUtils;
+import com.titi.titi_crypto_lib.util.CryptoUtils;
 import com.titi.titi_pusher.data.jpa.entity.NotificationEntity;
 import com.titi.titi_pusher.data.jpa.entity.NotificationHistoryEntity;
 import com.titi.titi_pusher.domain.notification.Notification;
