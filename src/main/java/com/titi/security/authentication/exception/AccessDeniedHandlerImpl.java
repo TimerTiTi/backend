@@ -1,6 +1,6 @@
 package com.titi.security.authentication.exception;
 
-import static com.titi.titi_common_lib.constant.ResponseCodes.ErrorCode.*;
+import static com.titi.titi_common_lib.constant.TiTiErrorCode.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
