@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.titi.crypto.util.CryptoUtils;
+import com.titi.library.titi_crypto.util.CryptoUtils;
 
 @Configuration
 public class CryptoConfig {
