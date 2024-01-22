@@ -28,6 +28,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+      connect-timeout: 3000 # Connection timeout.
+      timeout: 3000 # Read timeout.
   mail:
     host: smtp.gmail.com
     port: 587
@@ -57,7 +59,7 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
     org:
       hibernate:
         SQL: debug
