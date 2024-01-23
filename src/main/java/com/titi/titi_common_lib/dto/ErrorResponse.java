@@ -12,20 +12,17 @@ import com.titi.titi_common_lib.constant.TiTiErrorCode;
 @Getter
 public class ErrorResponse {
 
-	private final int status;
 	private final String code;
 	private final String message;
 	private final List<FieldError> errors;
 
 	private ErrorResponse(TiTiErrorCode errorCode, List<FieldError> errors) {
-		this.status = errorCode.getStatus();
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = errors;
 	}
 
 	private ErrorResponse(TiTiErrorCode errorCode) {
-		this.status = errorCode.getStatus();
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = new ArrayList<>();
