@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.titi.titi_common_lib.util.UidUtils;
 import com.titi.titi_pusher.domain.email.SimpleMailMessage;
 
 @Disabled("Do not automate actual sending mail tests.")
@@ -23,6 +24,7 @@ class SendMailPortAdapterTest {
 	void sendSimpleMessageTest() {
 		// given
 		final SimpleMailMessage simpleMailMessage = SimpleMailMessage.builder()
+			.notificationId(UidUtils.generateUid())
 			.from("TimerTiTi.dev@gmail.com")
 			.to("ksp970306@gmail.com")
 			.subject("subject")
