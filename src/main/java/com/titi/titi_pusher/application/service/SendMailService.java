@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import com.titi.titi_pusher.application.port.in.email.SendMailUseCase;
 import com.titi.titi_pusher.application.port.out.persistence.notification.CreateNotificationPort;
@@ -14,7 +13,6 @@ import com.titi.titi_pusher.domain.email.SimpleMailMessage;
 import com.titi.titi_pusher.domain.notification.Notification;
 import com.titi.titi_pusher.domain.notification.ServiceInfo;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 class SendMailService implements SendMailUseCase {
@@ -29,15 +27,14 @@ class SendMailService implements SendMailUseCase {
 		return switch (command) {
 			case Command.ToSimpleMessage message -> {
 				final Notification notification = this.createNotification(message);
-				final boolean isSuccessful = this.sendNotification(message);
-				log.info("[SendMailUseCase] {} to send mail. notificationId: {}", isSuccessful ? "Success" : "Fail", notification.notificationId());
+				final boolean isSuccessful = this.sendNotification(notification, message);
 				yield this.finishNotification(notification, isSuccessful);
 			}
 		};
 	}
 
 	private Notification createNotification(Command.ToSimpleMessage message) {
-		Notification notification = Notification.ofEmail(
+		final Notification notification = Notification.ofEmail(
 			message.notificationCategory(),
 			message.to(),
 			ServiceInfo.builder()
@@ -49,9 +46,10 @@ class SendMailService implements SendMailUseCase {
 		return notification;
 	}
 
-	private boolean sendNotification(Command.ToSimpleMessage message) {
+	private boolean sendNotification(Notification notification, Command.ToSimpleMessage message) {
 		return this.sendMailPort.sendSimpleMessage(
 			SimpleMailMessage.builder()
+				.notificationId(notification.notificationId())
 				.from(message.from())
 				.to(message.to())
 				.subject(message.subject())

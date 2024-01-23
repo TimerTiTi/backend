@@ -42,7 +42,11 @@ public class SecurityConfig {
 			.logout(AbstractHttpConfigurer::disable)
 			.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling(configurer -> configurer.accessDeniedHandler(this.accessDeniedHandler))
-			.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers(SecurityConstants.AuthenticationWhiteList.SWAGGER_V3).permitAll()
+				.requestMatchers(SecurityConstants.AuthenticationWhiteList.AUTH_API).permitAll()
+				.anyRequest().authenticated()
+			)
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}

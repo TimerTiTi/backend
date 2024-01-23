@@ -41,7 +41,7 @@ class NotificationMapperTest {
 		// given
 		final Notification notification = createNotificationOfEmail();
 		final String targetValue = "ksp970306@gmail.com";
-		given(cryptoUtils.encrypt(any(byte[].class))).willReturn(targetValue.getBytes());
+		given(cryptoUtils.encryptToString(any(String.class))).willReturn(targetValue);
 
 		// when
 		final NotificationEntity result = notificationMapper.toEntity(notification);
