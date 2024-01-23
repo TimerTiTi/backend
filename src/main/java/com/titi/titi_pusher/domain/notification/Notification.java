@@ -22,6 +22,7 @@ public record Notification(
 			.notificationId(UidUtils.generateUid())
 			.notificationCategory(notificationCategory)
 			.notificationType(NotificationType.EMAIL)
+			.notificationStatus(NotificationStatus.CREATED)
 			.targetInfo(new TargetInfo.EmailTargetInfo(email))
 			.serviceInfo(serviceInfo)
 			.build();
