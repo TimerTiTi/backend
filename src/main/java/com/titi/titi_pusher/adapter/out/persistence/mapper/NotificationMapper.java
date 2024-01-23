@@ -41,7 +41,7 @@ public class NotificationMapper {
 
 	private String getTargetValue(TargetInfo targetInfo) {
 		return switch (targetInfo) {
-			case TargetInfo.EmailTargetInfo emailTargetInfo -> new String(cryptoUtils.encrypt(emailTargetInfo.email().getBytes()));
+			case TargetInfo.EmailTargetInfo emailTargetInfo -> cryptoUtils.encryptToString(emailTargetInfo.email());
 		};
 	}
 
