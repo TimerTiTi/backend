@@ -16,7 +16,7 @@ class RedisAdapter implements CacheManager {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	@Override
-	public void put(String key, String value, long timeToLive) {
+	public void put(String key, String value, long timeToLive) throws Exception {
 		this.redisTemplate.opsForValue().set(key, value, timeToLive, TimeUnit.SECONDS);
 	}
 
