@@ -1,5 +1,6 @@
 package com.titi.exception;
 
+import static com.titi.titi_common_lib.constant.Constants.*;
 import static com.titi.titi_common_lib.constant.TiTiErrorCode.*;
 
 import java.util.ArrayList;
@@ -23,9 +24,9 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
-import com.titi.titi_common_lib.constant.Constants;
 import com.titi.titi_common_lib.constant.TiTiErrorCode;
 import com.titi.titi_common_lib.dto.ErrorResponse;
+import com.titi.titi_common_lib.dto.ErrorResponse.FieldError;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -37,7 +38,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.INPUT_VALUE_INVALID, this.getErrors(e.getConstraintViolations()));
+		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getConstraintViolations()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -48,7 +49,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
+		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -59,7 +60,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
+		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -68,8 +69,8 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler({MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
 	protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(Exception e) {
-		final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(this.getRequestParam(e), Constants.EMPTY, TiTiErrorCode.REQUEST_PARAMETER_MISSING.getMessage());
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.INPUT_VALUE_INVALID, errors);
+		final List<FieldError> errors = FieldError.of(this.getRequestParam(e), EMPTY, REQUEST_PARAMETER_MISSING.getMessage());
+		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, errors);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -78,8 +79,8 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-		final String value = e.getValue() == null ? Constants.EMPTY : e.getValue().toString();
-		final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of(e.getName(), value, e.getErrorCode());
+		final String value = e.getValue() == null ? EMPTY : e.getValue().toString();
+		final List<FieldError> errors = FieldError.of(e.getName(), value, e.getErrorCode());
 		final ErrorResponse response = ErrorResponse.of(INPUT_TYPE_INVALID, errors);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
@@ -89,7 +90,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.HTTP_MESSAGE_NOT_READABLE);
+		final ErrorResponse response = ErrorResponse.of(HTTP_MESSAGE_NOT_READABLE);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -99,7 +100,7 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
 		HttpRequestMethodNotSupportedException e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.METHOD_NOT_ALLOWED);
+		final ErrorResponse response = ErrorResponse.of(METHOD_NOT_ALLOWED);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -118,25 +119,26 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-		final ErrorResponse response = ErrorResponse.of(TiTiErrorCode.INTERNAL_SERVER_ERROR);
+		final ErrorResponse response = ErrorResponse.of(INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	private List<ErrorResponse.FieldError> getErrors(final BindingResult bindingResult) {
+	private List<FieldError> getErrors(final BindingResult bindingResult) {
 		final List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
 		return fieldErrors.stream()
-			.map(error -> new ErrorResponse.FieldError(error.getField(), error.getRejectedValue() == null ? Constants.EMPTY : error.getRejectedValue().toString(), error.getDefaultMessage()))
+			.map(error -> new FieldError(error.getField(), error.getRejectedValue() == null ? EMPTY : error.getRejectedValue().toString(), error.getDefaultMessage()))
 			.collect(Collectors.toList());
 	}
 
-	private List<ErrorResponse.FieldError> getErrors(final Set<ConstraintViolation<?>> constraintViolations) {
+	private List<FieldError> getErrors(final Set<ConstraintViolation<?>> constraintViolations) {
 		final List<ConstraintViolation<?>> lists = new ArrayList<>(constraintViolations);
 		return lists.stream()
 			.map(error -> {
-				final String invalidValue = error.getInvalidValue() == null ? Constants.EMPTY : error.getInvalidValue().toString();
-				final int index = error.getPropertyPath().toString().indexOf(Constants.DOT);
-				final String propertyPath = error.getPropertyPath().toString().substring(index + 1);
-				return new ErrorResponse.FieldError(propertyPath, invalidValue, error.getMessage());
+				final String invalidValue = error.getInvalidValue() == null ? EMPTY : error.getInvalidValue().toString();
+				final String propertyPath = error.getPropertyPath().toString();
+				final int lastDotIndex = propertyPath.lastIndexOf(DOT);
+				final String propertyName = lastDotIndex == -1 ? propertyPath : propertyPath.substring(lastDotIndex + 1);
+				return new FieldError(propertyName, invalidValue, error.getMessage());
 			})
 			.collect(Collectors.toList());
 	}
