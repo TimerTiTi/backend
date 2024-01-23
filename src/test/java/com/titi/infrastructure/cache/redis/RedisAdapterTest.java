@@ -26,7 +26,7 @@ class RedisAdapterTest {
 	private RedisAdapter redisAdapter;
 
 	@Test
-	void putTest() {
+	void putTest() throws Exception {
 		// given
 		final String key = "testKey";
 		final String value = "testValue";
