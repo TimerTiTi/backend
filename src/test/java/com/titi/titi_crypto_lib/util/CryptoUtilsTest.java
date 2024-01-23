@@ -20,4 +20,9 @@ class CryptoUtilsTest {
 		final byte[] encryptedData = cryptoUtils.encrypt(INPUT_DATA);
 		assertThat(cryptoUtils.decrypt(encryptedData)).isEqualTo(INPUT_DATA);
 	}
+
+	@Test
+	void encryptToStringTest() {
+		assertThatCode(() -> cryptoUtils.encryptToString("inputData")).doesNotThrowAnyException();
+	}
 }
