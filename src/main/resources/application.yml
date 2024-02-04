@@ -33,8 +33,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${TITI_SMTP_GMAIL_DEV_USERNAME}
-    password: ${TITI_SMTP_GMAIL_DEV_PASSWORD}
+    username: ${TITI_LOCAL_SMTP_GMAIL_USERNAME}
+    password: ${TITI_LOCAL_SMTP_GMAIL_PASSWORD}
     # JavaMail Session Properties
     # https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
     properties:
@@ -70,3 +70,60 @@ jwt:
 
 crypto:
   secret-key: 12345678901234567890123456789012
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${TITI_DEV_DATABASE_URI}:3306/titi?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${TITI_DEV_DATABASE_USERNAME}
+    password: ${TITI_DEV_DATABASE_PASSWORD}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 3000 # Connection timeout.
+      timeout: 3000 # Read timeout.
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${TITI_DEV_SMTP_GMAIL_USERNAME}
+    password: ${TITI_DEV_SMTP_GMAIL_PASSWORD}
+    # JavaMail Session Properties
+    # https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html
+    properties:
+      mail:
+        smtp:
+          auth: true # If true, attempt to authenticate the user using the AUTH command.
+          # Socket read timeout value in milliseconds. This timeout is implemented by java.net.Socket. Default is infinite timeout.
+          timeout: 5000
+          # Socket connection timeout value in milliseconds. This timeout is implemented by java.net.Socket. Default is infinite timeout.
+          connectiontimeout: 5000
+          # Socket write timeout value in milliseconds. This timeout is implemented by using a java.util.concurrent.ScheduledExecutorService
+          # per connection that schedules a thread to close the socket if the timeout expires. Thus, the overhead of using this timeout
+          # is one thread per connection. Default is infinite timeout.
+          writetimeout: 5000
+          starttls:
+            # If true, enables the use of the STARTTLS command (if supported by the server) to switch the connection to
+            # a TLS-protected connection before issuing any login commands. If the server does not support STARTTLS,
+            # the connection continues without the use of TLS; see the mail.smtp.starttls.required property to fail if
+            # STARTTLS isn't supported. Note that an appropriate trust store must configured so that the client will
+            # trust the server's certificate. Defaults to false.
+            enable: true
+
+logging:
+  level:
+    root: info
+    org:
+      hibernate:
+        SQL: debug
+        type: trace
+
+jwt:
+  secret-key: ${TITI_DEV_JWT_SECRET}
+
+crypto:
+  secret-key: ${TITI_DEV_CRYPTO_SECRET}
