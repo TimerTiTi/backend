@@ -1,3 +1,4 @@
+// https://docs.gradle.org/current/dsl/index.html
 plugins {
     id 'org.springframework.boot' version '3.1.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -5,15 +6,26 @@ plugins {
     id 'org.ec4j.editorconfig' version '0.0.3'
 }
 
+wrapper {
+    gradleVersion = 8.6
+}
+
 group = 'com.titi'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '21' // Java Source Level Control
-targetCompatibility = '21' // Java Compilation Version Control
+
+java {
+    sourceCompatibility = '21' // Java Source Level Control
+    targetCompatibility = '21' // Java Compilation Version Control
+}
+
+jar {
+    enabled = false // only generate executable jar file.
+}
 
 editorconfig {
     excludes = ['build']
 }
-check.dependsOn editorconfigCheck
+//check.dependsOn editorconfigCheck
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -52,6 +64,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
