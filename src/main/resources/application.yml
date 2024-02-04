@@ -83,7 +83,7 @@ spring:
     password: ${TITI_DEV_DATABASE_PASSWORD}
   data:
     redis:
-      host: localhost
+      host: ${TITI_DEV_REDIS_URI}
       port: 6379
       connect-timeout: 3000 # Connection timeout.
       timeout: 3000 # Read timeout.
