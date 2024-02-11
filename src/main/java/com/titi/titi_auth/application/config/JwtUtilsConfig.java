@@ -13,7 +13,7 @@ class JwtUtilsConfig {
 	@Bean
 	@ConditionalOnMissingBean
 	public JwtUtils jwtUtils(@Value("${jwt.secret-key}") String secretKey) {
-		return new JwtUtils(secretKey);
+		return new JwtUtils(secretKey.getBytes());
 	}
 
 }
