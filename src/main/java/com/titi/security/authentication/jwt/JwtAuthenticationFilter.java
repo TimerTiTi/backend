@@ -19,11 +19,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import com.titi.security.authentication.exception.TiTiAuthenticationException;
 import com.titi.security.constant.SecurityConstants;
 import com.titi.titi_common_lib.dto.ErrorResponse.FieldError;
-import com.titi.titi_common_lib.util.JwtUtils;
 
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-	private static final String TOKEN_PREFIX = JwtUtils.TOKEN_TYPE + SINGLE_SPACE;
+	/**
+	 * <a href="https://datatracker.ietf.org/doc/html/rfc6750">The OAuth 2.0 Authorization Framework: Bearer Token Usage</a>
+	 */
+	public static final String AUTHENTICATION_TYPE = "Bearer";
+	private static final String AUTHENTICATION_HEADER_PREFIX = AUTHENTICATION_TYPE + SINGLE_SPACE;
 
 	public JwtAuthenticationFilter(RequestMatcher matcher) {
 		super(matcher);
@@ -51,14 +54,14 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 	private String extractJwt(String authorizationHeader) {
 		this.validateAuthorizationHeader(authorizationHeader);
-		return authorizationHeader.substring(TOKEN_PREFIX.length());
+		return authorizationHeader.substring(AUTHENTICATION_HEADER_PREFIX.length());
 	}
 
 	private void validateAuthorizationHeader(String authorizationHeader) {
 		if (authorizationHeader == null) {
 			final List<FieldError> errors = FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, EMPTY, "Authorization header must not be null.");
 			throw new TiTiAuthenticationException(errors);
-		} else if (!authorizationHeader.startsWith(TOKEN_PREFIX)) {
+		} else if (!authorizationHeader.startsWith(AUTHENTICATION_HEADER_PREFIX)) {
 			final List<FieldError> errors = FieldError.of(SecurityConstants.REQUEST_HEADER_AUTHORIZATION, authorizationHeader, "Authorization header prefix is invalid.");
 			throw new TiTiAuthenticationException(errors);
 		}
