@@ -29,31 +29,26 @@ class GenerateAuthCodeController implements AuthApi {
 	@Operation(summary = "generateAuthCode API", description = "Generate AuthCode and send it to targetValue.")
 	@PostMapping(value = "/code", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenerateAuthCodeResponseBody> generateAuthCode(@Valid @RequestBody GenerateAuthCodeRequestBody requestBody) {
-		return this.makeResponseEntity(
-			switch (requestBody.targetType()) {
-				case TargetType.EMAIL -> this.generateAuthCodeForEmail(requestBody);
-			}
-		);
+		String authKey = switch (requestBody.targetType()) {
+			case TargetType.EMAIL -> this.generateAuthCodeForEmail(requestBody);
+		};
+		return ResponseEntity.status(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getStatus())
+			.body(
+				GenerateAuthCodeResponseBody.builder()
+					.code(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getCode())
+					.message(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getMessage())
+					.authKey(authKey)
+					.build()
+			);
 	}
 
-	private boolean generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
+	private String generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
 		return this.generateAuthCodeUseCase.invoke(
 			GenerateAuthCodeUseCase.Command.ToEmail.builder()
 				.authType(requestBody.authType)
 				.email(requestBody.targetValue())
 				.build()
 		);
-	}
-
-	private ResponseEntity<GenerateAuthCodeResponseBody> makeResponseEntity(boolean isSuccessful) {
-		final ResultCode resultCode = isSuccessful ? ResultCode.GENERATE_AUTH_CODE_SUCCESS : ResultCode.GENERATE_AUTH_CODE_FAILURE;
-		return ResponseEntity.status(resultCode.getStatus())
-			.body(
-				GenerateAuthCodeResponseBody.builder()
-					.code(resultCode.getCode())
-					.message(resultCode.getMessage())
-					.build()
-			);
 	}
 
 	@Builder
@@ -83,7 +78,10 @@ class GenerateAuthCodeController implements AuthApi {
 		) String code,
 		@Schema(
 			description = "API result message."
-		) String message
+		) String message,
+		@Schema(
+			description = "AuthKey required to verify the authentication code."
+		) String authKey
 	) {
 
 	}

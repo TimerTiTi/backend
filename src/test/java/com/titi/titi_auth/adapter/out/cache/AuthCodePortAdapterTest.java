@@ -30,9 +30,10 @@ class AuthCodePortAdapterTest {
 		final AuthCode authCode = new AuthCode(AuthenticationType.SIGN_UP, "123", TargetType.EMAIL, "test@example.com");
 
 		// when
-		authCodePortAdapter.put(authCode);
+		final String authKey = authCodePortAdapter.put(authCode);
 
 		// then
+		assertThat(authKey).isNotNull();
 		verify(cacheManager, times(1)).put(anyString(), anyString(), anyLong());
 	}
 
