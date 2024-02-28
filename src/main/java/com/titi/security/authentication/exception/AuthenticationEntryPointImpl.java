@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import com.titi.exception.TiTiErrorCodes;
 import com.titi.titi_common_lib.dto.ErrorResponse;
 
 @Component

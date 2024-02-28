@@ -1,11 +1,13 @@
-package com.titi.titi_common_lib.constant;
+package com.titi.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TiTiErrorCode {
+public enum TiTiErrorCodes {
+
+	GENERATE_AUTH_CODE_FAILURE(500, "AU7000", "Failed to generate and transmit the authentication code. Please try again later."),
 
 	INPUT_VALUE_INVALID(400, "E9000", "Invalid input value."),
 	INPUT_TYPE_INVALID(400, "E9001", "Invalid input type."),
@@ -15,7 +17,8 @@ public enum TiTiErrorCode {
 	REQUEST_HEADER_MISSING(400, "E9005", "Request header is missing."),
 	AUTHENTICATION_FAILURE(401, "E9006", "Authentication failed."),
 	INSUFFICIENT_AUTHORITY(403, "E9007", "Insufficient authority or permissions."),
-	INTERNAL_SERVER_ERROR(500, "E9999", "Internal server error.");
+	INTERNAL_SERVER_ERROR(500, "E9999", "Internal server error."),
+	;
 
 	private final int status;
 	private final String code;

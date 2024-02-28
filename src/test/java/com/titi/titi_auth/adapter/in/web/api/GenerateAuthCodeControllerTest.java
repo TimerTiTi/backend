@@ -14,6 +14,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.titi.exception.TiTiErrorCodes;
+import com.titi.exception.TiTiException;
 import com.titi.titi_auth.adapter.in.web.api.GenerateAuthCodeController.GenerateAuthCodeRequestBody;
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
 import com.titi.titi_auth.domain.AuthenticationType;
@@ -49,8 +51,8 @@ class GenerateAuthCodeControllerTest {
 	@WithMockUser
 	void generateAuthCodeForEmailTestSuccess() throws Exception {
 		// given
+		given(generateAuthCodeUseCase.invoke(any())).willReturn("authKey");
 		final GenerateAuthCodeRequestBody requestBody = getGenerateAuthCodeRequestBody();
-		given(generateAuthCodeUseCase.invoke(any())).willReturn(true);
 
 		// when
 		final ResultActions perform = mockGenerateAuthCode(requestBody);
@@ -58,7 +60,8 @@ class GenerateAuthCodeControllerTest {
 		// then
 		perform.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.code").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_SUCCESS.getCode()))
-			.andExpect(jsonPath("$.message").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_SUCCESS.getMessage()));
+			.andExpect(jsonPath("$.message").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_SUCCESS.getMessage()))
+			.andExpect(jsonPath("$.auth_key").exists());
 	}
 
 	@Test
@@ -66,15 +69,15 @@ class GenerateAuthCodeControllerTest {
 	void generateAuthCodeForEmailTestFailure() throws Exception {
 		// given
 		final GenerateAuthCodeRequestBody requestBody = getGenerateAuthCodeRequestBody();
-		given(generateAuthCodeUseCase.invoke(any())).willReturn(false);
+		doThrow(new TiTiException(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE)).when(generateAuthCodeUseCase).invoke(any());
 
 		// when
 		final ResultActions perform = mockGenerateAuthCode(requestBody);
 
 		// then
-		perform.andExpect(status().isOk())
-			.andExpect(jsonPath("$.code").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_FAILURE.getCode()))
-			.andExpect(jsonPath("$.message").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_FAILURE.getMessage()));
+		perform.andExpect(status().isInternalServerError())
+			.andExpect(jsonPath("$.code").value(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE.getCode()))
+			.andExpect(jsonPath("$.message").value(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE.getMessage()));
 	}
 
 }

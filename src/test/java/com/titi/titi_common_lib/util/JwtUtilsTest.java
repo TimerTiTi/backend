@@ -24,7 +24,7 @@ class JwtUtilsTest {
 	private final static String JWT_ID = "jwtId";
 	public static final Instant NOW = Instant.parse("2024-02-11T10:00:00.000000000Z");
 	private final static Date EXPIRED_DATE = Date.from(NOW.minus(1, TimeUnit.DAYS.toChronoUnit()));
-	private final static Date EXPIRATION_DATE = Date.from(NOW.plus(1, TimeUnit.DAYS.toChronoUnit()));
+	private final static Date EXPIRATION_DATE = Date.from(NOW.plus(99999999, TimeUnit.DAYS.toChronoUnit()));
 	private final static Date ISSUED_DATE = Date.from(NOW);
 	private static final JwtUtils.Payload PAYLOAD = JwtUtils.Payload.builder()
 		.registeredClaim(

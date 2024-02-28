@@ -7,6 +7,6 @@ public interface SendAuthCodePort {
 	String NOTIFICATION_CATEGORY = "AUTHENTICATION";
 	String MESSAGE_STATUS_COMPLETED = "COMPLETED";
 
-	boolean send(AuthCode authCode);
+	void send(AuthCode authCode);
 
 }

@@ -14,7 +14,7 @@ interface AuthApi {
 	@AllArgsConstructor
 	enum ResultCode {
 		GENERATE_AUTH_CODE_SUCCESS(201, "AU1000", "Successfully generated and transmitted the authentication code."),
-		GENERATE_AUTH_CODE_FAILURE(200, "AU1001", "Failed to generate and transmit the authentication code. Please try again later."),
+		VERIFY_AUTH_CODE_SUCCESS(200, "AU1001", "Successfully verifying the authentication code issues an authentication token."),
 		;
 
 		private final int status;

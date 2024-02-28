@@ -1,7 +1,5 @@
 package com.titi.security.authentication.exception;
 
-import static com.titi.titi_common_lib.constant.TiTiErrorCode.*;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -16,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import com.titi.exception.TiTiErrorCodes;
 import com.titi.titi_common_lib.dto.ErrorResponse;
 
 @Component
@@ -30,7 +29,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
 		try (OutputStream os = response.getOutputStream()) {
-			objectMapper.writeValue(os, ErrorResponse.of(INSUFFICIENT_AUTHORITY));
+			objectMapper.writeValue(os, ErrorResponse.of(TiTiErrorCodes.INSUFFICIENT_AUTHORITY));
 			os.flush();
 		}
 	}
