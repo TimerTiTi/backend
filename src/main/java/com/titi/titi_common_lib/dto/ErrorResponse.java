@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.titi.titi_common_lib.constant.TiTiErrorCode;
+import com.titi.exception.TiTiErrorCodes;
 
 @Getter
 public class ErrorResponse {
@@ -16,23 +16,23 @@ public class ErrorResponse {
 	private final String message;
 	private final List<FieldError> errors;
 
-	private ErrorResponse(TiTiErrorCode errorCode, List<FieldError> errors) {
+	private ErrorResponse(TiTiErrorCodes errorCode, List<FieldError> errors) {
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = errors;
 	}
 
-	private ErrorResponse(TiTiErrorCode errorCode) {
+	private ErrorResponse(TiTiErrorCodes errorCode) {
 		this.code = errorCode.getCode();
 		this.message = errorCode.getMessage();
 		this.errors = new ArrayList<>();
 	}
 
-	public static ErrorResponse of(final TiTiErrorCode errorCode) {
+	public static ErrorResponse of(final TiTiErrorCodes errorCode) {
 		return new ErrorResponse(errorCode);
 	}
 
-	public static ErrorResponse of(final TiTiErrorCode errorCode, final List<FieldError> errors) {
+	public static ErrorResponse of(final TiTiErrorCodes errorCode, final List<FieldError> errors) {
 		return new ErrorResponse(errorCode, errors);
 	}
 
@@ -56,7 +56,7 @@ public class ErrorResponse {
 			return fieldErrors;
 		}
 
-		public static List<FieldError> of(String field, String value, TiTiErrorCode errorCode) {
+		public static List<FieldError> of(String field, String value, TiTiErrorCodes errorCode) {
 			final List<FieldError> fieldErrors = new ArrayList<>();
 			fieldErrors.add(new FieldError(field, value, errorCode.getMessage()));
 			return fieldErrors;

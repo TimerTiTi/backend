@@ -18,7 +18,7 @@ class GenerateAuthCodeService implements GenerateAuthCodeUseCase {
 	private final SendAuthCodePort sendAuthCodePort;
 
 	@Override
-	public boolean invoke(Command command) {
+	public String invoke(Command command) {
 		final String generatedAuthCode = GenerateAuthCodeUseCase.generateAuthCode();
 		final AuthCode authCode = switch (command) {
 			case Command.ToEmail cmd -> AuthCode.builder()
@@ -28,8 +28,9 @@ class GenerateAuthCodeService implements GenerateAuthCodeUseCase {
 				.targetValue(cmd.email())
 				.build();
 		};
-		this.putAuthCodePort.put(authCode);
-		return this.sendAuthCodePort.send(authCode);
+		final String authKey = this.putAuthCodePort.put(authCode);
+		this.sendAuthCodePort.send(authCode);
+		return authKey;
 	}
 
 }

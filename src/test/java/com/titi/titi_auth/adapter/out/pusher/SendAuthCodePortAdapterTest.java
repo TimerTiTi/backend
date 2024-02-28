@@ -3,12 +3,14 @@ package com.titi.titi_auth.adapter.out.pusher;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.titi.exception.TiTiException;
 import com.titi.titi_auth.application.common.constant.AuthConstants;
 import com.titi.titi_auth.application.port.out.SendAuthCodePort;
 import com.titi.titi_auth.domain.AuthCode;
@@ -48,10 +50,9 @@ class SendAuthCodePortAdapterTest {
 		);
 
 		// when
-		final boolean result = sendAuthCodePortAdapter.send(authCode);
+		sendAuthCodePortAdapter.send(authCode);
 
 		// then
-		assertThat(result).isTrue();
 		verify(internalSendMailGateway, times(1)).sendSimpleMessage(eq(expectedRequest));
 	}
 
@@ -67,18 +68,13 @@ class SendAuthCodePortAdapterTest {
 			.serviceName(AuthConstants.SERVICE_NAME)
 			.serviceRequestId("AUTH_CODE_NOTI_dq2enrB2Oxn6IovRYEilwvc/iqyKHaozSy3D00pEiOY=")
 			.build();
-		given(internalSendMailGateway.sendSimpleMessage(expectedRequest)).willReturn(
-			SendMessageResponse.builder()
-				.messageStatus("FAILED")
-				.messageId("987654321")
-				.build()
-		);
+		given(internalSendMailGateway.sendSimpleMessage(expectedRequest)).willThrow(TiTiException.class);
 
 		// when
-		final boolean result = sendAuthCodePortAdapter.send(authCode);
+		final ThrowableAssert.ThrowingCallable throwingCallable = () -> sendAuthCodePortAdapter.send(authCode);
 
 		// then
-		assertThat(result).isFalse();
+		assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
 		verify(internalSendMailGateway, times(1)).sendSimpleMessage(eq(expectedRequest));
 	}
 }

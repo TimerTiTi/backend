@@ -18,7 +18,7 @@ public interface GenerateAuthCodeUseCase {
 		return RandomGenerator.generate(true, true, true, AUTH_CODE_LENGTH, false);
 	}
 
-	boolean invoke(@Valid Command command);
+	String invoke(@Valid Command command);
 
 	sealed interface Command {
 

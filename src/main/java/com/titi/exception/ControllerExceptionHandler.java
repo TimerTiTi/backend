@@ -1,7 +1,6 @@
 package com.titi.exception;
 
 import static com.titi.titi_common_lib.constant.Constants.*;
-import static com.titi.titi_common_lib.constant.TiTiErrorCode.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
-import com.titi.titi_common_lib.constant.TiTiErrorCode;
 import com.titi.titi_common_lib.dto.ErrorResponse;
 import com.titi.titi_common_lib.dto.ErrorResponse.FieldError;
 
@@ -38,7 +37,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
-		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getConstraintViolations()));
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INPUT_VALUE_INVALID, this.getErrors(e.getConstraintViolations()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -49,7 +48,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -60,7 +59,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
-		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INPUT_VALUE_INVALID, this.getErrors(e.getBindingResult()));
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -69,8 +68,8 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler({MissingServletRequestParameterException.class, MissingServletRequestPartException.class})
 	protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(Exception e) {
-		final List<FieldError> errors = FieldError.of(this.getRequestParam(e), EMPTY, REQUEST_PARAMETER_MISSING.getMessage());
-		final ErrorResponse response = ErrorResponse.of(INPUT_VALUE_INVALID, errors);
+		final List<FieldError> errors = FieldError.of(this.getRequestParam(e), EMPTY, TiTiErrorCodes.REQUEST_PARAMETER_MISSING.getMessage());
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INPUT_VALUE_INVALID, errors);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -81,7 +80,7 @@ public class ControllerExceptionHandler {
 	protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
 		final String value = e.getValue() == null ? EMPTY : e.getValue().toString();
 		final List<FieldError> errors = FieldError.of(e.getName(), value, e.getErrorCode());
-		final ErrorResponse response = ErrorResponse.of(INPUT_TYPE_INVALID, errors);
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INPUT_TYPE_INVALID, errors);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -90,7 +89,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-		final ErrorResponse response = ErrorResponse.of(HTTP_MESSAGE_NOT_READABLE);
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.HTTP_MESSAGE_NOT_READABLE);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -98,9 +97,8 @@ public class ControllerExceptionHandler {
 	 * 지원하지 않는 <b>HTTP method</b> 호출할 경우 예외 처리
 	 */
 	@ExceptionHandler
-	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
-		HttpRequestMethodNotSupportedException e) {
-		final ErrorResponse response = ErrorResponse.of(METHOD_NOT_ALLOWED);
+	protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.METHOD_NOT_ALLOWED);
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
@@ -109,9 +107,8 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleTiTiException(TiTiException e) {
-		final TiTiErrorCode errorCode = e.getErrorCode();
-		final ErrorResponse response = ErrorResponse.of(errorCode, e.getErrors());
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getErrors());
+		return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getErrorCode().getStatus()));
 	}
 
 	/**
@@ -119,7 +116,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleException(Exception e) {
-		final ErrorResponse response = ErrorResponse.of(INTERNAL_SERVER_ERROR);
+		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

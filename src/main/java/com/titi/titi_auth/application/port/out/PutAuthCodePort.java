@@ -4,6 +4,6 @@ import com.titi.titi_auth.domain.AuthCode;
 
 public interface PutAuthCodePort {
 
-	void put(AuthCode authCode);
+	String put(AuthCode authCode);
 
 }
