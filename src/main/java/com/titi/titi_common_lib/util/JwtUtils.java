@@ -16,7 +16,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class JwtUtils {
 
-	private static final String JWT_TYPE = "jwt";
+	private static final String JWT_TYPE = "JWT";
 	private final byte[] secretKey;
 
 	public String generate(Payload payload) {
