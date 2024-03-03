@@ -1,4 +1,4 @@
-package com.titi.titi_auth.application.port.out;
+package com.titi.titi_auth.application.port.out.cache;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public interface GetAuthCodePort {
 
 	@Builder
 	record Result(
-		Optional<AuthCode> authCode
+		Optional<String> authCode
 	) {
 
 	}

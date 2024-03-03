@@ -11,9 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.titi.exception.TiTiException;
 import com.titi.infrastructure.cache.CacheManager;
-import com.titi.titi_auth.domain.AuthCode;
-import com.titi.titi_auth.domain.AuthenticationType;
-import com.titi.titi_auth.domain.TargetType;
+import com.titi.titi_auth.application.port.out.cache.PutAuthCodePort;
 
 @ExtendWith(MockitoExtension.class)
 class AuthCodePortAdapterTest {
@@ -27,25 +25,36 @@ class AuthCodePortAdapterTest {
 	@Test
 	void putTestSuccess() throws Exception {
 		// given
-		final AuthCode authCode = new AuthCode(AuthenticationType.SIGN_UP, "123", TargetType.EMAIL, "test@example.com");
+		final String authKey = "authKey";
+		final String authCode = "authCode";
 
 		// when
-		final String authKey = authCodePortAdapter.put(authCode);
+		authCodePortAdapter.invoke(
+			PutAuthCodePort.Command.builder()
+				.authKey(authKey)
+				.authCode(authCode)
+				.build()
+		);
 
 		// then
-		assertThat(authKey).isNotNull();
 		verify(cacheManager, times(1)).put(anyString(), anyString(), anyLong());
 	}
 
 	@Test
 	void putTestThrowsRuntimeException() throws Exception {
 		// given
-		final AuthCode authCode = new AuthCode(AuthenticationType.SIGN_UP, "123", TargetType.EMAIL, "test@example.com");
+		final String authKey = "authKey";
+		final String authCode = "authCode";
 
 		doThrow(Exception.class).when(cacheManager).put(anyString(), anyString(), anyLong());
 
 		// when-then
-		assertThatCode(() -> authCodePortAdapter.put(authCode)).isInstanceOf(TiTiException.class);
+		assertThatCode(() -> authCodePortAdapter.invoke(
+			PutAuthCodePort.Command.builder()
+				.authKey(authKey)
+				.authCode(authCode)
+				.build()
+		)).isInstanceOf(TiTiException.class);
 	}
 
 }

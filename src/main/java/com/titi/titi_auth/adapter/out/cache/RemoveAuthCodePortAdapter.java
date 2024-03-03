@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.titi.infrastructure.cache.CacheManager;
-import com.titi.titi_auth.application.port.out.RemoveAuthCodePort;
+import com.titi.titi_auth.application.port.out.cache.RemoveAuthCodePort;
+import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
+import com.titi.titi_auth.common.TiTiAuthException;
 
 @Slf4j
 @Component
@@ -22,7 +24,7 @@ public class RemoveAuthCodePortAdapter implements RemoveAuthCodePort {
 			log.info("Successfully removed the authCode from the cache. authKey: {}", command.authKey());
 		} catch (Exception e) {
 			log.error("Failed to remove the authCode from the cache. authKey: {} ", command.authKey(), e);
-			throw new RuntimeException(e);
+			throw new TiTiAuthException(TiTiAuthBusinessCodes.VERIFY_AUTH_CODE_FAILURE);
 		}
 	}
 

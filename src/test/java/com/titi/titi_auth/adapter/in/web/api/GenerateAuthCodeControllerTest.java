@@ -14,11 +14,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.titi.exception.TiTiErrorCodes;
-import com.titi.exception.TiTiException;
 import com.titi.titi_auth.adapter.in.web.api.GenerateAuthCodeController.GenerateAuthCodeRequestBody;
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
 import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
+import com.titi.titi_auth.common.TiTiAuthException;
 import com.titi.titi_auth.domain.AuthenticationType;
 import com.titi.titi_auth.domain.TargetType;
 import com.titi.titi_common_lib.util.JacksonHelper;
@@ -50,9 +49,9 @@ class GenerateAuthCodeControllerTest {
 
 	@Test
 	@WithMockUser
-	void generateAuthCodeForEmailTestSuccess() throws Exception {
+	void whenSuccessToGenerateAuthCodeThenCodeIsAU1000() throws Exception {
 		// given
-		given(generateAuthCodeUseCase.invoke(any())).willReturn("authKey");
+		given(generateAuthCodeUseCase.invoke(any())).willReturn(GenerateAuthCodeUseCase.Result.builder().authKey("authKey").build());
 		final GenerateAuthCodeRequestBody requestBody = getGenerateAuthCodeRequestBody();
 
 		// when
@@ -67,18 +66,18 @@ class GenerateAuthCodeControllerTest {
 
 	@Test
 	@WithMockUser
-	void generateAuthCodeForEmailTestFailure() throws Exception {
+	void whenThrowsInternalServerErrorThenCodeIsAU7000() throws Exception {
 		// given
 		final GenerateAuthCodeRequestBody requestBody = getGenerateAuthCodeRequestBody();
-		doThrow(new TiTiException(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE)).when(generateAuthCodeUseCase).invoke(any());
+		doThrow(new TiTiAuthException(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_FAILURE)).when(generateAuthCodeUseCase).invoke(any());
 
 		// when
 		final ResultActions perform = mockGenerateAuthCode(requestBody);
 
 		// then
 		perform.andExpect(status().isInternalServerError())
-			.andExpect(jsonPath("$.code").value(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE.getCode()))
-			.andExpect(jsonPath("$.message").value(TiTiErrorCodes.GENERATE_AUTH_CODE_FAILURE.getMessage()));
+			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_FAILURE.getCode()))
+			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_FAILURE.getMessage()));
 	}
 
 }

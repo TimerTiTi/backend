@@ -1,4 +1,4 @@
-package com.titi.titi_auth.application.port.out;
+package com.titi.titi_auth.application.port.out.cache;
 
 import lombok.Builder;
 
