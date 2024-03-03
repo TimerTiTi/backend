@@ -107,8 +107,8 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleTiTiException(TiTiException e) {
-		final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getErrors());
-		return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getErrorCode().getStatus()));
+		final ErrorResponse response = ErrorResponse.of(e.getCode(), e.getMessage(), e.getErrors());
+		return new ResponseEntity<>(response, HttpStatusCode.valueOf(e.getStatus()));
 	}
 
 	/**

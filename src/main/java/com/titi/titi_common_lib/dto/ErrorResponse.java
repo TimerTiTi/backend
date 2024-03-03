@@ -16,9 +16,9 @@ public class ErrorResponse {
 	private final String message;
 	private final List<FieldError> errors;
 
-	private ErrorResponse(TiTiErrorCodes errorCode, List<FieldError> errors) {
-		this.code = errorCode.getCode();
-		this.message = errorCode.getMessage();
+	private ErrorResponse(String code, String message, List<FieldError> errors) {
+		this.code = code;
+		this.message = message;
 		this.errors = errors;
 	}
 
@@ -28,12 +28,16 @@ public class ErrorResponse {
 		this.errors = new ArrayList<>();
 	}
 
-	public static ErrorResponse of(final TiTiErrorCodes errorCode) {
+	public static ErrorResponse of(TiTiErrorCodes errorCode) {
 		return new ErrorResponse(errorCode);
 	}
 
-	public static ErrorResponse of(final TiTiErrorCodes errorCode, final List<FieldError> errors) {
-		return new ErrorResponse(errorCode, errors);
+	public static ErrorResponse of(TiTiErrorCodes errorCode, List<FieldError> errors) {
+		return new ErrorResponse(errorCode.getCode(), errorCode.getMessage(), errors);
+	}
+
+	public static ErrorResponse of(String code, String message, List<FieldError> errors) {
+		return new ErrorResponse(code, message, errors);
 	}
 
 	@Getter

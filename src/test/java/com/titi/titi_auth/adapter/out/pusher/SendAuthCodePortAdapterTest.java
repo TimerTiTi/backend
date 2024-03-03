@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.titi.exception.TiTiException;
 import com.titi.titi_auth.application.common.constant.AuthConstants;
-import com.titi.titi_auth.application.port.out.SendAuthCodePort;
+import com.titi.titi_auth.application.port.out.pusher.SendAuthCodePort;
 import com.titi.titi_auth.domain.AuthCode;
 import com.titi.titi_auth.domain.AuthenticationType;
 import com.titi.titi_auth.domain.TargetType;
@@ -50,7 +50,7 @@ class SendAuthCodePortAdapterTest {
 		);
 
 		// when
-		sendAuthCodePortAdapter.send(authCode);
+		sendAuthCodePortAdapter.invoke(authCode);
 
 		// then
 		verify(internalSendMailGateway, times(1)).sendSimpleMessage(eq(expectedRequest));
@@ -71,7 +71,7 @@ class SendAuthCodePortAdapterTest {
 		given(internalSendMailGateway.sendSimpleMessage(expectedRequest)).willThrow(TiTiException.class);
 
 		// when
-		final ThrowableAssert.ThrowingCallable throwingCallable = () -> sendAuthCodePortAdapter.send(authCode);
+		final ThrowableAssert.ThrowingCallable throwingCallable = () -> sendAuthCodePortAdapter.invoke(authCode);
 
 		// then
 		assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);

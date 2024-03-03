@@ -6,25 +6,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.titi.infrastructure.cache.CacheManager;
-import com.titi.titi_auth.application.port.out.cache.PutAuthCodePort;
+import com.titi.titi_auth.application.port.out.cache.RemoveAuthCodePort;
 import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 import com.titi.titi_auth.common.TiTiAuthException;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class AuthCodePortAdapter implements PutAuthCodePort {
+public class RemoveAuthCodePortAdapter implements RemoveAuthCodePort {
 
 	private final CacheManager cacheManager;
 
 	@Override
 	public void invoke(Command command) {
 		try {
-			this.cacheManager.put(command.authKey(), command.authCode(), AuthCacheKeys.AUTH_CODE.getTimeToLive());
-			log.info("Successfully put authCode in cache. authKey: {}.", command.authKey());
+			cacheManager.remove(command.authKey());
+			log.info("Successfully removed the authCode from the cache. authKey: {}", command.authKey());
 		} catch (Exception e) {
-			log.error("Failed to put authCode in cache. authKey: {}.", command.authKey(), e);
-			throw new TiTiAuthException(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_FAILURE);
+			log.error("Failed to remove the authCode from the cache. authKey: {} ", command.authKey(), e);
+			throw new TiTiAuthException(TiTiAuthBusinessCodes.VERIFY_AUTH_CODE_FAILURE);
 		}
 	}
 

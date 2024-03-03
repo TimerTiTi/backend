@@ -7,8 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TiTiErrorCodes {
 
-	GENERATE_AUTH_CODE_FAILURE(500, "AU7000", "Failed to generate and transmit the authentication code. Please try again later."),
-
 	INPUT_VALUE_INVALID(400, "E9000", "Invalid input value."),
 	INPUT_TYPE_INVALID(400, "E9001", "Invalid input type."),
 	METHOD_NOT_ALLOWED(405, "E9002", "HTTP method not allowed."),
