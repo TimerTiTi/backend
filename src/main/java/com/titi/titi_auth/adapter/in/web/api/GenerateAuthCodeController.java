@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
+import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 import com.titi.titi_auth.domain.AuthenticationType;
 import com.titi.titi_auth.domain.TargetType;
 
@@ -32,11 +33,11 @@ class GenerateAuthCodeController implements AuthApi {
 		String authKey = switch (requestBody.targetType()) {
 			case TargetType.EMAIL -> this.generateAuthCodeForEmail(requestBody);
 		};
-		return ResponseEntity.status(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getStatus())
+		return ResponseEntity.status(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getStatus())
 			.body(
 				GenerateAuthCodeResponseBody.builder()
-					.code(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getCode())
-					.message(ResultCode.GENERATE_AUTH_CODE_SUCCESS.getMessage())
+					.code(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getCode())
+					.message(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getMessage())
 					.authKey(authKey)
 					.build()
 			);
@@ -45,7 +46,7 @@ class GenerateAuthCodeController implements AuthApi {
 	private String generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
 		return this.generateAuthCodeUseCase.invoke(
 			GenerateAuthCodeUseCase.Command.ToEmail.builder()
-				.authType(requestBody.authType)
+				.authType(requestBody.authType())
 				.email(requestBody.targetValue())
 				.build()
 		);

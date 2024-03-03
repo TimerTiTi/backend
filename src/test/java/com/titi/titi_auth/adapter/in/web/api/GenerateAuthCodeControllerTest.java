@@ -18,6 +18,7 @@ import com.titi.exception.TiTiErrorCodes;
 import com.titi.exception.TiTiException;
 import com.titi.titi_auth.adapter.in.web.api.GenerateAuthCodeController.GenerateAuthCodeRequestBody;
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
+import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 import com.titi.titi_auth.domain.AuthenticationType;
 import com.titi.titi_auth.domain.TargetType;
 import com.titi.titi_common_lib.util.JacksonHelper;
@@ -59,8 +60,8 @@ class GenerateAuthCodeControllerTest {
 
 		// then
 		perform.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.code").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_SUCCESS.getCode()))
-			.andExpect(jsonPath("$.message").value(AuthApi.ResultCode.GENERATE_AUTH_CODE_SUCCESS.getMessage()))
+			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getCode()))
+			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getMessage()))
 			.andExpect(jsonPath("$.auth_key").exists());
 	}
 
