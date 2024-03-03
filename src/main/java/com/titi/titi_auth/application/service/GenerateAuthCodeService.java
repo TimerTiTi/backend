@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
-import com.titi.titi_auth.application.port.out.PutAuthCodePort;
-import com.titi.titi_auth.application.port.out.SendAuthCodePort;
+import com.titi.titi_auth.application.port.out.cache.PutAuthCodePort;
+import com.titi.titi_auth.application.port.out.pusher.SendAuthCodePort;
 import com.titi.titi_auth.domain.AuthCode;
 import com.titi.titi_auth.domain.TargetType;
 
@@ -18,7 +18,7 @@ class GenerateAuthCodeService implements GenerateAuthCodeUseCase {
 	private final SendAuthCodePort sendAuthCodePort;
 
 	@Override
-	public String invoke(Command command) {
+	public Result invoke(Command command) {
 		final String generatedAuthCode = GenerateAuthCodeUseCase.generateAuthCode();
 		final AuthCode authCode = switch (command) {
 			case Command.ToEmail cmd -> AuthCode.builder()
@@ -28,9 +28,15 @@ class GenerateAuthCodeService implements GenerateAuthCodeUseCase {
 				.targetValue(cmd.email())
 				.build();
 		};
-		final String authKey = this.putAuthCodePort.put(authCode);
-		this.sendAuthCodePort.send(authCode);
-		return authKey;
+		final String generateAuthKey = GenerateAuthCodeUseCase.generateAuthKey(authCode);
+		this.putAuthCodePort.invoke(
+			PutAuthCodePort.Command.builder()
+				.authKey(generateAuthKey)
+				.authCode(generatedAuthCode)
+				.build()
+		);
+		this.sendAuthCodePort.invoke(authCode);
+		return Result.builder().authKey(generateAuthKey).build();
 	}
 
 }

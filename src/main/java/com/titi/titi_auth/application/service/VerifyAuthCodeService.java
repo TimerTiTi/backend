@@ -12,11 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_auth.application.common.constant.AuthConstants;
 import com.titi.titi_auth.application.port.in.VerifyAuthCodeUseCase;
-import com.titi.titi_auth.application.port.out.GetAuthCodePort;
-import com.titi.titi_auth.application.port.out.RemoveAuthCodePort;
+import com.titi.titi_auth.application.port.out.cache.GetAuthCodePort;
+import com.titi.titi_auth.application.port.out.cache.RemoveAuthCodePort;
 import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 import com.titi.titi_auth.common.TiTiAuthException;
-import com.titi.titi_auth.domain.AuthCode;
 import com.titi.titi_common_lib.util.JwtUtils;
 
 @Service
@@ -37,11 +36,11 @@ public class VerifyAuthCodeService implements VerifyAuthCodeUseCase {
 		return Result.builder().authToken(authToken).build();
 	}
 
-	private void validateAuthCode(String authCode, Optional<AuthCode> cachedAuthCode) {
+	private void validateAuthCode(String authCode, Optional<String> cachedAuthCode) {
 		if (cachedAuthCode.isEmpty()) {
 			throw new TiTiAuthException(TiTiAuthBusinessCodes.INVALID_AUTH_CODE);
 		}
-		if (!cachedAuthCode.get().authCode().equals(authCode)) {
+		if (!cachedAuthCode.get().equals(authCode)) {
 			throw new TiTiAuthException(TiTiAuthBusinessCodes.MISMATCHED_AUTH_CODE);
 		}
 	}

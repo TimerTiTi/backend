@@ -11,11 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.titi.exception.TiTiException;
 import com.titi.titi_auth.application.port.in.GenerateAuthCodeUseCase;
-import com.titi.titi_auth.application.port.out.PutAuthCodePort;
-import com.titi.titi_auth.application.port.out.SendAuthCodePort;
-import com.titi.titi_auth.domain.AuthCode;
+import com.titi.titi_auth.application.port.out.cache.PutAuthCodePort;
+import com.titi.titi_auth.application.port.out.pusher.SendAuthCodePort;
+import com.titi.titi_auth.common.TiTiAuthException;
 import com.titi.titi_auth.domain.AuthenticationType;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,46 +40,49 @@ class GenerateAuthCodeServiceTest {
 	void invokeTestSuccess() {
 		// given
 		final GenerateAuthCodeUseCase.Command.ToEmail command = getCommand();
-		given(putAuthCodePort.put(any())).willReturn("authKey");
 
 		// when
-		final String authKey = generateAuthCodeService.invoke(command);
+		final GenerateAuthCodeUseCase.Result result = generateAuthCodeService.invoke(command);
 
 		// then
-		assertThat(authKey).isNotNull();
-		verify(putAuthCodePort, times(1)).put(any(AuthCode.class));
-		verify(sendAuthCodePort, times(1)).send(any(AuthCode.class));
+		assertThat(result).isNotNull();
+		assertThat(result.authKey()).isNotNull();
+		verify(putAuthCodePort, times(1)).invoke(any());
+		verify(sendAuthCodePort, times(1)).invoke(any());
 	}
 
 	@Nested
 	class invokeTestFailure {
+
 		@Test
-		void whenPutAuthCodePortThrowsTiTiException() {
+		void whenPutAuthCodePortThrowsTiTiAuthException() {
 			// given
 			final GenerateAuthCodeUseCase.Command.ToEmail command = getCommand();
-			given(putAuthCodePort.put(any())).willThrow(TiTiException.class);
+			doThrow(TiTiAuthException.class).when(putAuthCodePort).invoke(any());
 
 			// when
 			final ThrowableAssert.ThrowingCallable throwingCallable = () -> generateAuthCodeService.invoke(command);
 
 			// then
-			assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
-			verify(putAuthCodePort, times(1)).put(any(AuthCode.class));
+			assertThatCode(throwingCallable).isInstanceOf(TiTiAuthException.class);
+			verify(putAuthCodePort, times(1)).invoke(any());
 		}
+
 		@Test
-		void whenSendAuthCodePortThrowsTiTiException() {
+		void whenSendAuthCodePortThrowsTiTiAuthException() {
 			// given
 			final GenerateAuthCodeUseCase.Command.ToEmail command = getCommand();
-			doThrow(TiTiException.class).when(sendAuthCodePort).send(any());
+			doThrow(TiTiAuthException.class).when(sendAuthCodePort).invoke(any());
 
 			// when
 			final ThrowableAssert.ThrowingCallable throwingCallable = () -> generateAuthCodeService.invoke(command);
 
 			// then
-			assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
-			verify(putAuthCodePort, times(1)).put(any(AuthCode.class));
-			verify(sendAuthCodePort, times(1)).send(any(AuthCode.class));
+			assertThatCode(throwingCallable).isInstanceOf(TiTiAuthException.class);
+			verify(putAuthCodePort, times(1)).invoke(any());
+			verify(sendAuthCodePort, times(1)).invoke(any());
 		}
+
 	}
 
 }

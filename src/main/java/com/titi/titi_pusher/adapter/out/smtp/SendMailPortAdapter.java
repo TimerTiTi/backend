@@ -21,10 +21,10 @@ class SendMailPortAdapter implements SendMailPort {
 	public boolean sendSimpleMessage(SimpleMailMessage message) {
 		try {
 			this.javaMailSender.send(this.createSimpleMailMessage(message));
-			log.info("[sendSimpleMessage] Success to send mail. notificationId: {}", message.notificationId());
+			log.info("Successfully sent mail. notificationId: {}", message.notificationId());
 			return true;
 		} catch (MailSendException e) {
-			log.error("[sendSimpleMessage] Fail to send mail. notificationId: {}", message.notificationId(), e);
+			log.error("Failed to send mail. notificationId: {}", message.notificationId(), e);
 			return false;
 		}
 	}

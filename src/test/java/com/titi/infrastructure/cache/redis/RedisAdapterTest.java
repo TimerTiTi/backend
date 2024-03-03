@@ -25,6 +25,8 @@ class RedisAdapterTest {
 	@InjectMocks
 	private RedisAdapter redisAdapter;
 
+	// TODO convert to real test.
+
 	@Test
 	void putTest() throws Exception {
 		// given

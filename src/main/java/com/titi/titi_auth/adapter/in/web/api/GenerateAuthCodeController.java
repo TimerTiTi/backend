@@ -31,7 +31,7 @@ class GenerateAuthCodeController implements AuthApi {
 	@PostMapping(value = "/code", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenerateAuthCodeResponseBody> generateAuthCode(@Valid @RequestBody GenerateAuthCodeRequestBody requestBody) {
 		String authKey = switch (requestBody.targetType()) {
-			case TargetType.EMAIL -> this.generateAuthCodeForEmail(requestBody);
+			case TargetType.EMAIL -> this.generateAuthCodeForEmail(requestBody).authKey();
 		};
 		return ResponseEntity.status(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getStatus())
 			.body(
@@ -43,13 +43,13 @@ class GenerateAuthCodeController implements AuthApi {
 			);
 	}
 
-	private String generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
+	private GenerateAuthCodeUseCase.Result generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
 		return this.generateAuthCodeUseCase.invoke(
-			GenerateAuthCodeUseCase.Command.ToEmail.builder()
-				.authType(requestBody.authType())
-				.email(requestBody.targetValue())
-				.build()
-		);
+				GenerateAuthCodeUseCase.Command.ToEmail.builder()
+					.authType(requestBody.authType())
+					.email(requestBody.targetValue())
+					.build()
+			);
 	}
 
 	@Builder
