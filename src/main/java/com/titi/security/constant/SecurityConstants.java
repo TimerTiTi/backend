@@ -17,11 +17,13 @@ public final class SecurityConstants {
 
 		public static final String[] SWAGGER_V3 = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html"};
 		public static final String[] AUTH_API = {"/api/auth/**"};
+		public static final String[] USER_API = {"/api/user/members/check"};
 
-		public static List<String> getAll() {
+		public static List<String> getAllPatterns() {
 			final List<String> whiteList = new ArrayList<>();
 			whiteList.addAll(Arrays.stream(SWAGGER_V3).toList());
 			whiteList.addAll(Arrays.stream(AUTH_API).toList());
+			whiteList.addAll(Arrays.stream(USER_API).toList());
 			return whiteList;
 		}
 
