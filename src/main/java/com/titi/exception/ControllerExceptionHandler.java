@@ -23,10 +23,12 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 
 import com.titi.titi_common_lib.dto.ErrorResponse;
 import com.titi.titi_common_lib.dto.ErrorResponse.FieldError;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -116,6 +118,7 @@ public class ControllerExceptionHandler {
 	 */
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+		log.error("Internal Server Error. ", e);
 		final ErrorResponse response = ErrorResponse.of(TiTiErrorCodes.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
