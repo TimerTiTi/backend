@@ -43,6 +43,7 @@ public class SecurityConfig {
 			.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.exceptionHandling(configurer -> configurer.accessDeniedHandler(this.accessDeniedHandler))
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers(SecurityConstants.AuthenticationWhiteList.USER_API).permitAll()
 				.requestMatchers(SecurityConstants.AuthenticationWhiteList.SWAGGER_V3).permitAll()
 				.requestMatchers(SecurityConstants.AuthenticationWhiteList.AUTH_API).permitAll()
 				.anyRequest().authenticated()
@@ -53,7 +54,7 @@ public class SecurityConfig {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
-		final RequestMatcher matcher = new WhiteListRequestMatcher(SecurityConstants.AuthenticationWhiteList.getAll());
+		final RequestMatcher matcher = new WhiteListRequestMatcher(SecurityConstants.AuthenticationWhiteList.getAllPatterns());
 		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(matcher);
 		filter.setAuthenticationFailureHandler(new AuthenticationEntryPointFailureHandler(this.authenticationEntryPoint));
 		filter.setAuthenticationManager(new ProviderManager(this.authenticationProvider));

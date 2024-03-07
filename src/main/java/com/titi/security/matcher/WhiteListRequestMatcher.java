@@ -8,6 +8,7 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 public class WhiteListRequestMatcher implements RequestMatcher {
 
 	private final OrRequestMatcher matcher;
