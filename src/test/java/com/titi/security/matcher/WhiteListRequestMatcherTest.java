@@ -14,7 +14,7 @@ import com.titi.security.constant.SecurityConstants;
 @ExtendWith(MockitoExtension.class)
 class WhiteListRequestMatcherTest {
 
-	private final WhiteListRequestMatcher whiteListRequestMatcher = new WhiteListRequestMatcher(SecurityConstants.AuthenticationWhiteList.getAll());
+	private final WhiteListRequestMatcher whiteListRequestMatcher = new WhiteListRequestMatcher(SecurityConstants.AuthenticationWhiteList.getAllPatterns());
 
 	@Test
 	void testMatchesWhenRequestIsNotInWhiteListThenReturnTrue() {

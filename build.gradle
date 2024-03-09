@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.1.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'org.ec4j.editorconfig' version '0.0.3'
 }
 
 wrapper {
@@ -21,11 +20,6 @@ java {
 jar {
     enabled = false // only generate executable jar file.
 }
-
-editorconfig {
-    excludes = ['build']
-}
-//check.dependsOn editorconfigCheck
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -49,6 +43,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
@@ -58,12 +57,32 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
 test {
     useJUnitPlatform()
+}
+
+// https://docs.gradle.org/current/userguide/upgrading_version_8.html
+def generated = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+sourceSets {
+    main.java.srcDirs += [ generated ]
+}
+
+clean {
+    delete file(generated)
 }

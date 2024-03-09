@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS members
     profile_image_name   VARCHAR(50) NOT NULL COMMENT '프로필 이미지 파일 이름',
     profile_image_id     CHAR(36) UNIQUE NOT NULL COMMENT '프로필 이미지 파일 ID',
     profile_image_type   ENUM('JPG', 'JPEG', 'PNG') NOT NULL COMMENT '프로필 이미지 파일 유형',
-    refresh_token        VARCHAR(100) COMMENT '인증 갱신 토큰',
     created_at           DATETIME(6) NOT NULL COMMENT '생성 일시',
     updated_at           DATETIME(6) NOT NULL COMMENT '수정 일시',
     PRIMARY KEY (id),
