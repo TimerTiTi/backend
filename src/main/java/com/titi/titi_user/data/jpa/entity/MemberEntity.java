@@ -22,7 +22,7 @@ import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
 
 @Entity(name = "members")
 @Getter
-@Builder(access = AccessLevel.PROTECTED)
+@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberEntity extends BaseEntity {

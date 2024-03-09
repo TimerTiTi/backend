@@ -32,9 +32,9 @@ public class ProfileImage {
 	public static ProfileImage defaultInstance() {
 		// TODO implement
 		return ProfileImage.builder()
-			.profileImageName(null)
-			.profileImageId(null)
-			.profileImageType(null)
+			.profileImageName("name")
+			.profileImageId("id")
+			.profileImageType(ProfileImageType.PNG)
 			.build();
 	}
 }
