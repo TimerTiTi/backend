@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -28,6 +29,7 @@ class CheckUsernameController implements UserApi {
 	private final CheckUsernameUseCase checkUsernameUseCase;
 
 	@Operation(summary = "checkUsername API", description = "Check if the username exists.")
+	@Parameter(name = "username", description = "Username in Email format.", required = true)
 	@GetMapping(value = "/members/check", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CheckUsernameResponseBody> checkUsername(@NotBlank @Email @Length(max = 30) @RequestParam String username) {
 		final CheckUsernameUseCase.Result result = this.checkUsernameUseCase.invoke(CheckUsernameUseCase.Command.builder().username(username).build());
