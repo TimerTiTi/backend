@@ -1,0 +1,86 @@
+package com.titi.titi_user.adapter.in.web.api;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+
+import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
+import com.titi.titi_user.common.TiTiUserBusinessCodes;
+
+@RestController
+@RequiredArgsConstructor
+class RegisterMemberController implements UserApi {
+
+	private final RegisterMemberUseCase registerMemberUseCase;
+
+	@Operation(summary = "registerMember API", description = "Sign up for the TiTi service as a regular member.")
+	@PostMapping(value = "/members/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RegisterMemberResponseBody> registerMember(@Valid @RequestBody RegisterMemberRequestBody requestBody) {
+		this.registerMemberUseCase.invoke(
+			RegisterMemberUseCase.Command.builder()
+				.username(requestBody.username())
+				.encodedWrappedPassword(requestBody.encodedWrappedPassword())
+				.nickname(requestBody.nickname())
+				.authToken(requestBody.authToken())
+				.build()
+		);
+		return ResponseEntity.status(TiTiUserBusinessCodes.REGISTER_MEMBER_SUCCESS.getStatus())
+			.body(
+				RegisterMemberResponseBody.builder()
+					.code(TiTiUserBusinessCodes.REGISTER_MEMBER_SUCCESS.getCode())
+					.message(TiTiUserBusinessCodes.REGISTER_MEMBER_SUCCESS.getMessage())
+					.build()
+			);
+	}
+
+	@Builder
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public record RegisterMemberRequestBody(
+		@Schema(
+			description = "username in Email format.",
+			requiredMode = Schema.RequiredMode.REQUIRED
+		) @NotBlank @Email @Length(max = 30) String username,
+		@Schema(
+			description = "encoded_wrapped_password encrypted using AES-256 to wrap the raw_password. (base64url encoded)",
+			requiredMode = Schema.RequiredMode.REQUIRED,
+			example = "mT175WI6o9NNVlZkRWL7CrezUornTO3ueZJCjroq"
+		) @NotBlank String encodedWrappedPassword,
+		@Schema(
+			description = "nickname to be used for the TiTi service.",
+			requiredMode = Schema.RequiredMode.REQUIRED
+		) @NotBlank @Length(max = 15) String nickname,
+		@Schema(
+			description = "The token issued upon successful authentication code validation.",
+			requiredMode = Schema.RequiredMode.REQUIRED
+		) @NotBlank String authToken
+	) {
+
+	}
+
+	@Builder
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public record RegisterMemberResponseBody(
+		@Schema(
+			description = "TiTi Business code."
+		) String code,
+		@Schema(
+			description = "API result message."
+		) String message
+	) {
+
+	}
+
+}
