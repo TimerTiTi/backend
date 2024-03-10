@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS members
 (
     id                   BIGINT AUTO_INCREMENT,
     username             VARCHAR(30) NOT NULL UNIQUE COMMENT '아이디(이메일)',
-    password             VARCHAR(30) NOT NULL COMMENT '비밀번호',
+    password             VARCHAR(255) NOT NULL COMMENT '비밀번호',
     nickname             VARCHAR(15) NOT NULL COMMENT '닉네임',
     hashcode             CHAR(8) NOT NULL COMMENT '해시코드',
     authority            ENUM('MEMBER', 'ADMIN') NOT NULL COMMENT '권한',

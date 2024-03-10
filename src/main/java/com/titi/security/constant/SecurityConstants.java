@@ -17,7 +17,7 @@ public final class SecurityConstants {
 
 		public static final String[] SWAGGER_V3 = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html"};
 		public static final String[] AUTH_API = {"/api/auth/**"};
-		public static final String[] USER_API = {"/api/user/members/check"};
+		public static final String[] USER_API = {"/api/user/members/check", "/api/user/members/register"};
 
 		public static List<String> getAllPatterns() {
 			final List<String> whiteList = new ArrayList<>();

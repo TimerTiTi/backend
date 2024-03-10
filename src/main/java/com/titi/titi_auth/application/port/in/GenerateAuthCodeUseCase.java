@@ -1,7 +1,5 @@
 package com.titi.titi_auth.application.port.in;
 
-import static com.titi.titi_common_lib.constant.Constants.*;
-
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -20,9 +18,7 @@ public interface GenerateAuthCodeUseCase {
 	int AUTH_CODE_LENGTH = 6;
 
 	static String generateAuthKey(AuthCode authCode) {
-		return HashingUtils.hashSha256(AuthCacheKeys.AUTH_CODE.getPrefix(), UNDERSCORE,
-			authCode.authType().getShortenName(), authCode.targetType().getShortenName(), authCode.targetValue()
-		);
+		return HashingUtils.hashSha256(AuthCacheKeys.AUTH_CODE.getPrefix(), authCode.authType().getShortenName(), authCode.targetType().getShortenName(), authCode.targetValue());
 	}
 
 	static String generateAuthCode() {
