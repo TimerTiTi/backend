@@ -18,6 +18,9 @@ class SaveMemberPortAdapter implements SaveMemberPort {
 
 	@Override
 	public Member invoke(Member member) {
+		if (member.id() != null) {
+			throw new IllegalArgumentException("member.id() must be null.");
+		}
 		final MemberEntity memberEntity = memberEntityRepository.save(EntityMapper.INSTANCE.toEntity(member));
 		return EntityMapper.INSTANCE.toDomain(memberEntity);
 	}
