@@ -38,7 +38,6 @@ public interface RegisterMemberUseCase {
 		public String unwrapPassword(byte[] wrappingKey) {
 			final byte[] wrappedPassword = this.decodePassword();
 			return this.unwrapPassword(wrappingKey, wrappedPassword);
-
 		}
 
 		public void validateAuthKey(String authKey) {
