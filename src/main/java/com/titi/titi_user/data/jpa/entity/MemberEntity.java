@@ -14,15 +14,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
 import com.titi.titi_user.domain.member.AccountStatus;
 import com.titi.titi_user.domain.member.Authority;
 import com.titi.titi_user.domain.member.MembershipType;
 import com.titi.titi_user.domain.member.ProfileImage;
-import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
 
 @Entity(name = "members")
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberEntity extends BaseEntity {
