@@ -35,13 +35,18 @@ public class JwtUtils {
 			.compact();
 	}
 
-	public Claims getPayloads(String jwt) throws IllegalArgumentException {
+	public Claims getPayloads(String jwt, String type) throws IllegalArgumentException {
 		try {
-			return (Claims)Jwts.parser()
+			final Claims claims = (Claims)Jwts.parser()
 				.verifyWith(Keys.hmacShaKeyFor(this.secretKey))
 				.build()
 				.parse(jwt)
 				.getPayload();
+			final String claimType = claims.get(Payload.TYPE, String.class);
+			if (!claimType.equals(type)) {
+				throw new IllegalArgumentException("JWT token is invalid. Type is invalid. : " + claimType);
+			}
+			return claims;
 		} catch (JwtException e) {
 			throw new IllegalArgumentException("JWT token is invalid. " + e.getMessage(), e);
 		}
@@ -52,6 +57,8 @@ public class JwtUtils {
 		@NonNull RegisteredClaim registeredClaim,
 		@Nullable Map<String, Object> additionalClaims
 	) {
+
+		public static final String TYPE = "type";
 
 		/**
 		 * Represents the registered claims in a JSON Web Token (JWT).
