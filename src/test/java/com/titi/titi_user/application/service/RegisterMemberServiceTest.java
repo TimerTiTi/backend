@@ -71,7 +71,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedWrappedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
@@ -91,7 +91,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedWrappedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
@@ -109,7 +109,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedWrappedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();

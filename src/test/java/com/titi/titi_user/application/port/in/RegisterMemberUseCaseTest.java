@@ -21,23 +21,23 @@ import com.titi.titi_user.common.TiTiUserException;
 class RegisterMemberUseCaseTest {
 
 	@Nested
-	class UnwrapPassword {
+	class GetRawPassword {
 
-		private static final byte[] WRAPPING_KEY = "12345678901234567890123456789012".getBytes();
+		private static final byte[] WRAPPING_KEY = "803984986d8211443170c42a37d33d61".getBytes();
 
 		@Test
 		void successfulScenario() {
 			// given
 			final String rawPassword = "qlalfqjsgh1!";
-			final byte[] wrappedPassword = AESUtils.encrypt(WRAPPING_KEY, rawPassword.getBytes(), AESCipherModes.GCM_NO_PADDING);
-			final String encodedWrappedPassword = Base64.getUrlEncoder().encodeToString(wrappedPassword);
-
+			final byte[] encryptedPassword = AESUtils.encrypt(WRAPPING_KEY, rawPassword.getBytes(), AESCipherModes.GCM_NO_PADDING);
+			final String encodedEncryptedPassword = Base64.getUrlEncoder().encodeToString(encryptedPassword);
+			
 			final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
-				.encodedWrappedPassword(encodedWrappedPassword)
+				.encodedEncryptedPassword(encodedEncryptedPassword)
 				.build();
 
 			// when
-			final String unwrapPassword = command.unwrapPassword(WRAPPING_KEY);
+			final String unwrapPassword = command.getRawPassword(WRAPPING_KEY);
 
 			// then
 			assertThat(rawPassword).isEqualTo(unwrapPassword);
@@ -49,11 +49,11 @@ class RegisterMemberUseCaseTest {
 			final String rawPassword = "qlalfqjsgh1!";
 
 			final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
-				.encodedWrappedPassword(rawPassword)
+				.encodedEncryptedPassword(rawPassword)
 				.build();
 
 			// when
-			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.unwrapPassword(WRAPPING_KEY);
+			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.getRawPassword(WRAPPING_KEY);
 
 			// then
 			assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
@@ -66,11 +66,11 @@ class RegisterMemberUseCaseTest {
 			final String encodedPassword = Base64.getUrlEncoder().encodeToString(rawPassword.getBytes());
 
 			final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
-				.encodedWrappedPassword(encodedPassword)
+				.encodedEncryptedPassword(encodedPassword)
 				.build();
 
 			// when
-			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.unwrapPassword(WRAPPING_KEY);
+			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.getRawPassword(WRAPPING_KEY);
 
 			// then
 			assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
@@ -80,15 +80,15 @@ class RegisterMemberUseCaseTest {
 		void failToMisMatchedPatternScenario() {
 			// given
 			final String rawPassword = "qlalfqjsgh";
-			final byte[] wrappedPassword = AESUtils.encrypt(WRAPPING_KEY, rawPassword.getBytes(), AESCipherModes.GCM_NO_PADDING);
-			final String encodedWrappedPassword = Base64.getUrlEncoder().encodeToString(wrappedPassword);
+			final byte[] encryptedPassword = AESUtils.encrypt(WRAPPING_KEY, rawPassword.getBytes(), AESCipherModes.GCM_NO_PADDING);
+			final String encodedEncryptedPassword = Base64.getUrlEncoder().encodeToString(encryptedPassword);
 
 			final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
-				.encodedWrappedPassword(encodedWrappedPassword)
+				.encodedEncryptedPassword(encodedEncryptedPassword)
 				.build();
 
 			// when
-			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.unwrapPassword(WRAPPING_KEY);
+			final ThrowableAssert.ThrowingCallable throwingCallable = () -> command.getRawPassword(WRAPPING_KEY);
 
 			// then
 			assertThatCode(throwingCallable).isInstanceOf(TiTiException.class);
