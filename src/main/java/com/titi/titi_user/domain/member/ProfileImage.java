@@ -1,5 +1,7 @@
 package com.titi.titi_user.domain.member;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
@@ -33,7 +35,7 @@ public class ProfileImage {
 		// TODO implement
 		return ProfileImage.builder()
 			.profileImageName("name")
-			.profileImageId("id")
+			.profileImageId(UUID.randomUUID().toString())
 			.profileImageType(ProfileImageType.PNG)
 			.build();
 	}
