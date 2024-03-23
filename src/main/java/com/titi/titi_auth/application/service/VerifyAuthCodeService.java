@@ -2,6 +2,7 @@ package com.titi.titi_auth.application.service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,6 +59,7 @@ public class VerifyAuthCodeService implements VerifyAuthCodeUseCase {
 						.jwtId(UUID.randomUUID().toString())
 						.build()
 				)
+				.additionalClaims(Map.of(JwtUtils.Payload.TYPE, AuthConstants.AUTH_TOKEN))
 				.build()
 		);
 	}

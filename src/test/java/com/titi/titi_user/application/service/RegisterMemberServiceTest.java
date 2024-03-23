@@ -22,6 +22,7 @@ import com.titi.titi_common_lib.util.JwtUtils;
 import com.titi.titi_crypto_lib.constant.AESCipherModes;
 import com.titi.titi_crypto_lib.util.AESUtils;
 import com.titi.titi_crypto_lib.util.HashingUtils;
+import com.titi.titi_user.application.common.constant.UserConstants;
 import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
 import com.titi.titi_user.application.port.out.persistence.SaveMemberPort;
@@ -64,7 +65,7 @@ class RegisterMemberServiceTest {
 	@Test
 	void successfulScenario() {
 		// given
-		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
+		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
 		given(MOCK_CLAIMS.getSubject()).willReturn(AUTH_KEY);
 		given(findMemberPort.invoke(any())).willReturn(Optional.empty());
 		given(passwordEncoder.encode(RAW_PASSWORD)).willReturn("encryptedPassword");
@@ -85,7 +86,7 @@ class RegisterMemberServiceTest {
 	@Test
 	void failToValidateUsernameScenario() {
 		// given
-		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
+		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
 		given(MOCK_CLAIMS.getSubject()).willReturn(AUTH_KEY);
 		given(findMemberPort.invoke(any())).willReturn(Optional.of(mock(Member.class)));
 
@@ -105,7 +106,7 @@ class RegisterMemberServiceTest {
 	@Test
 	void failToValidateAuthTokenScenario() {
 		// given
-		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN)).willThrow(IllegalArgumentException.class);
+		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willThrow(IllegalArgumentException.class);
 
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()

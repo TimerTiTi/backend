@@ -17,8 +17,7 @@ import io.jsonwebtoken.security.Keys;
 
 class JwtUtilsTest {
 
-	private final static String CLAIM_KEY = "testKey";
-	private final static String CLAIM_VALUE = "testValue";
+	private final static String TEST_TOKEN = "testToken";
 	private final static String ISSUER = "issuer";
 	private final static String SUBJECT = "subject";
 	private final static String JWT_ID = "jwtId";
@@ -36,11 +35,11 @@ class JwtUtilsTest {
 				.jwtId(JWT_ID)
 				.build()
 		)
-		.additionalClaims(Map.of(CLAIM_KEY, CLAIM_VALUE))
+		.additionalClaims(Map.of(JwtUtils.Payload.TYPE, TEST_TOKEN))
 		.build();
 	private final static String SECRET_KEY = "abcdefghijklmnopqrstuwxzy0123456";
 	private static final JwtBuilder JWT_BUILDER = Jwts.builder()
-		.claim(CLAIM_KEY, CLAIM_VALUE)
+		.claim(JwtUtils.Payload.TYPE, TEST_TOKEN)
 		.issuer(ISSUER)
 		.subject(SUBJECT)
 		.issuedAt(ISSUED_DATE)
@@ -51,13 +50,13 @@ class JwtUtilsTest {
 	@Test
 	void generateAndGetPayLoadsScenario() {
 		final String jwt = jwtUtils.generate(PAYLOAD);
-		final Claims claims = jwtUtils.getPayloads(jwt);
+		final Claims claims = jwtUtils.getPayloads(jwt, TEST_TOKEN);
 		assertThat(claims.getIssuer()).isEqualTo(ISSUER);
 		assertThat(claims.getSubject()).isEqualTo(SUBJECT);
 		assertThat(claims.getExpiration()).isEqualTo(EXPIRATION_DATE);
 		assertThat(claims.getIssuedAt()).isEqualTo(ISSUED_DATE);
 		assertThat(claims.getId()).isEqualTo(JWT_ID);
-		assertThat(claims.get(CLAIM_KEY)).isEqualTo(CLAIM_VALUE);
+		assertThat(claims.get(JwtUtils.Payload.TYPE)).isEqualTo(TEST_TOKEN);
 	}
 
 	@Nested
@@ -75,12 +74,12 @@ class JwtUtilsTest {
 
 		@Test
 		void givenValidJwtThenSuccessful() {
-			assertThat(jwtUtils.getPayloads(JWT_BUILDER.expiration(EXPIRATION_DATE).compact()).get(CLAIM_KEY)).isEqualTo(CLAIM_VALUE);
+			assertThat(jwtUtils.getPayloads(JWT_BUILDER.expiration(EXPIRATION_DATE).compact(), TEST_TOKEN).get(JwtUtils.Payload.TYPE)).isEqualTo(TEST_TOKEN);
 		}
 
 		@Test
 		void givenExpiredJwtThenThrowIllegalArgumentException() {
-			assertThatCode(() -> jwtUtils.getPayloads(JWT_BUILDER.expiration(EXPIRED_DATE).compact())).isInstanceOf(IllegalArgumentException.class);
+			assertThatCode(() -> jwtUtils.getPayloads(JWT_BUILDER.expiration(EXPIRED_DATE).compact(), TEST_TOKEN)).isInstanceOf(IllegalArgumentException.class);
 		}
 
 	}
