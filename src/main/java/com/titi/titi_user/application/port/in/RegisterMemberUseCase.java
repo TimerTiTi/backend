@@ -26,7 +26,7 @@ public interface RegisterMemberUseCase {
 	@Builder
 	record Command(
 		String username,
-		String encodedWrappedPassword,
+		String encodedEncryptedPassword,
 		String nickname,
 		String authToken
 	) {
@@ -35,9 +35,9 @@ public interface RegisterMemberUseCase {
 		private static final Pattern PATTERN = Pattern.compile(RAW_PASSWORD_REGEX);
 		private static final String AUTH_KEY_PREFIX = "ac_SU_E";
 
-		public String unwrapPassword(byte[] wrappingKey) {
-			final byte[] wrappedPassword = this.decodePassword();
-			return this.unwrapPassword(wrappingKey, wrappedPassword);
+		public String getRawPassword(byte[] wrappingKey) {
+			final byte[] encryptedPassword = this.decodePassword();
+			return this.decryptPassword(wrappingKey, encryptedPassword);
 		}
 
 		public void validateAuthKey(String authKey) {
@@ -46,32 +46,33 @@ public interface RegisterMemberUseCase {
 			}
 		}
 
-		private String unwrapPassword(byte[] wrappingKey, byte[] wrappedPassword) {
+		private String decryptPassword(byte[] wrappingKey, byte[] encryptedPassword) {
 			try {
-				final String rawPassword = new String(AESUtils.decrypt(wrappingKey, wrappedPassword, AESCipherModes.GCM_NO_PADDING), StandardCharsets.UTF_8);
+				final String rawPassword = new String(AESUtils.decrypt(wrappingKey, encryptedPassword, AESCipherModes.GCM_NO_PADDING), StandardCharsets.UTF_8);
 				this.validateRawPasswordPattern(rawPassword);
 				return rawPassword;
 			} catch (TiTiCryptoException e) {
-				log.error("Unwrapping the encodedWrappedPassword failed. ", e);
-				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedWrappedPassword", this.encodedWrappedPassword, "Unwrapping the encodedWrappedPassword failed.");
+				log.error("Decrypt the encodedEncryptedPassword failed. ", e);
+				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedEncryptedPassword", this.encodedEncryptedPassword, "Unwrapping the encodedEncryptedPassword failed.");
 				throw new TiTiException(TiTiErrorCodes.INPUT_TYPE_INVALID, errors);
 			}
 		}
 
 		private byte[] decodePassword() {
 			try {
-				return Base64.getUrlDecoder().decode(this.encodedWrappedPassword);
+				return Base64.getUrlDecoder().decode(this.encodedEncryptedPassword);
 			} catch (IllegalArgumentException e) {
-				log.error("Base64url decoding the encodedWrappedPassword failed. ", e);
-				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedWrappedPassword", this.encodedWrappedPassword, "Base64url decoding the encodedWrappedPassword failed.");
+				log.error("Base64url decoding the encodedEncryptedPassword failed. ", e);
+				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedEncryptedPassword", this.encodedEncryptedPassword,
+					"Base64url decoding the encodedEncryptedPassword failed.");
 				throw new TiTiException(TiTiErrorCodes.INPUT_TYPE_INVALID, errors);
 			}
 		}
 
 		private void validateRawPasswordPattern(String rawPassword) {
 			if (!PATTERN.matcher(rawPassword).matches()) {
-				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedWrappedPassword", this.encodedWrappedPassword,
-					"The rawPassword before being wrapped into encodedWrappedPassword must match " + RAW_PASSWORD_REGEX);
+				final List<ErrorResponse.FieldError> errors = ErrorResponse.FieldError.of("encodedEncryptedPassword", this.encodedEncryptedPassword,
+					"The rawPassword before being encrypted into encodedEncryptedPassword must match " + RAW_PASSWORD_REGEX);
 				throw new TiTiException(TiTiErrorCodes.INPUT_TYPE_INVALID, errors);
 			}
 		}

@@ -32,7 +32,7 @@ class RegisterMemberController implements UserApi {
 		this.registerMemberUseCase.invoke(
 			RegisterMemberUseCase.Command.builder()
 				.username(requestBody.username())
-				.encodedWrappedPassword(requestBody.encodedWrappedPassword())
+				.encodedEncryptedPassword(requestBody.encodedEncryptedPassword())
 				.nickname(requestBody.nickname())
 				.authToken(requestBody.authToken())
 				.build()
@@ -54,10 +54,10 @@ class RegisterMemberController implements UserApi {
 			requiredMode = Schema.RequiredMode.REQUIRED
 		) @NotBlank @Email @Length(max = 30) String username,
 		@Schema(
-			description = "encoded_wrapped_password encrypted using AES-256 to wrap the raw_password. (base64url encoded)",
+			description = "it is encrypted using AES-256 to wrap the raw_password then encoded using base64url.",
 			requiredMode = Schema.RequiredMode.REQUIRED,
-			example = "mT175WI6o9NNVlZkRWL7CrezUornTO3ueZJCjroq"
-		) @NotBlank String encodedWrappedPassword,
+			example = "6o171NOMWMJ2BMgouXrOr82lFLFFo-hA9qphcA=="
+		) @NotBlank String encodedEncryptedPassword,
 		@Schema(
 			description = "nickname to be used for the TiTi service.",
 			requiredMode = Schema.RequiredMode.REQUIRED

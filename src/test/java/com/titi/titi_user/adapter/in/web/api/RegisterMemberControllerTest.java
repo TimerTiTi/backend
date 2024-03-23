@@ -30,7 +30,7 @@ class RegisterMemberControllerTest {
 	private static RegisterMemberRequestBody getRegisterMemberRequestBody() {
 		return RegisterMemberRequestBody.builder()
 			.username("test@gmail.com")
-			.encodedWrappedPassword("encodedWrappedPassword")
+			.encodedEncryptedPassword("encodedEncryptedPassword")
 			.nickname("nickname")
 			.authToken("authToken")
 			.build();
