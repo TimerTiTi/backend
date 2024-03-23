@@ -28,14 +28,14 @@ class RegisterMemberService implements RegisterMemberUseCase {
 	private final JwtUtils jwtUtils;
 	private final FindMemberPort findMemberPort;
 	private final SaveMemberPort saveMemberPort;
-	@Value("${crypto.wrapping-key}")
-	private String wrappingKey;
+	@Value("${crypto.secret-key}")
+	private String secretKey;
 
 	@Override
 	public void invoke(Command command) {
 		this.validateAuthToken(command);
 		this.validateUsername(command.username());
-		final String rawPassword = command.unwrapPassword(this.wrappingKey.getBytes(StandardCharsets.UTF_8));
+		final String rawPassword = command.getRawPassword(this.secretKey.getBytes(StandardCharsets.UTF_8));
 		final String encryptedPassword = this.passwordEncoder.encode(rawPassword);
 		final Member member = Member.builder()
 			.username(command.username())
