@@ -26,6 +26,7 @@ import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
 import com.titi.titi_user.application.port.out.persistence.SaveMemberPort;
 import com.titi.titi_user.common.TiTiUserException;
+import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
 import com.titi.titi_user.domain.member.Member;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,9 +37,9 @@ class RegisterMemberServiceTest {
 	private static final String USERNAME = "test@gmail.com";
 	private static final String AUTH_KEY = HashingUtils.hashSha256("ac_SU_E", USERNAME);
 	private static final String RAW_PASSWORD = "qlalfqjsgh1!";
-	private static final String WRAPPING_KEY = "12345678901234567890123456789012";
-	private static final byte[] WRAPPED_PASSWORD = AESUtils.encrypt(WRAPPING_KEY.getBytes(), RAW_PASSWORD.getBytes(), AESCipherModes.GCM_NO_PADDING);
-	private static final String ENCODED_WRAPPED_PASSWORD = Base64.getUrlEncoder().encodeToString(WRAPPED_PASSWORD);
+	private static final String SECRET_KEY = "12345678901234567890123456789012";
+	private static final byte[] ENCRYPTED_PASSWORD = AESUtils.encrypt(SECRET_KEY.getBytes(), RAW_PASSWORD.getBytes(), AESCipherModes.GCM_NO_PADDING);
+	private static final String ENCODED_ENCRYPTED_PASSWORD = Base64.getUrlEncoder().encodeToString(ENCRYPTED_PASSWORD);
 
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -57,7 +58,7 @@ class RegisterMemberServiceTest {
 
 	@BeforeEach
 	void setup() {
-		ReflectionTestUtils.setField(registerMemberService, "wrappingKey", WRAPPING_KEY);
+		ReflectionTestUtils.setField(registerMemberService, "secretKey", SECRET_KEY);
 	}
 
 	@Test
@@ -71,7 +72,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
@@ -91,7 +92,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
@@ -109,7 +110,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedEncryptedPassword(ENCODED_WRAPPED_PASSWORD)
+			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
