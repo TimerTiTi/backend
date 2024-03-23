@@ -35,7 +35,7 @@ class RegisterMemberService implements RegisterMemberUseCase {
 	public void invoke(Command command) {
 		this.validateAuthToken(command);
 		this.validateUsername(command.username());
-		final String rawPassword = command.getRawPassword(this.secretKey.getBytes(StandardCharsets.UTF_8));
+		final String rawPassword = command.encodedEncryptedPassword().getRawPassword(this.secretKey.getBytes(StandardCharsets.UTF_8));
 		final String encryptedPassword = this.passwordEncoder.encode(rawPassword);
 		final Member member = Member.builder()
 			.username(command.username())
