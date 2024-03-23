@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public final class SecurityConstants {
 
 	public static final String REQUEST_HEADER_AUTHORIZATION = "Authorization";
+	public static final String ACCESS_TOKEN = "accessToken";
 
 	@NoArgsConstructor(access = AccessLevel.PRIVATE)
 	public static final class AuthenticationWhiteList {

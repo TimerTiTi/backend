@@ -28,7 +28,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		final String jwt = ((JwtAuthenticationToken)authentication).getCredentials();
 		try {
-			final Claims claims = jwtUtils.getPayloads(jwt);
+			final Claims claims = jwtUtils.getPayloads(jwt, SecurityConstants.ACCESS_TOKEN);
 			this.checkTokenRevocation(claims.getId());
 			final Long memberId = Long.valueOf(claims.getSubject());
 			return JwtAuthenticationToken.of(memberId, jwt, getAuthorities(claims));

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_common_lib.util.JwtUtils;
+import com.titi.titi_user.application.common.constant.UserConstants;
 import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
 import com.titi.titi_user.application.port.out.persistence.SaveMemberPort;
@@ -58,7 +59,7 @@ class RegisterMemberService implements RegisterMemberUseCase {
 
 	private void validateAuthToken(Command command) {
 		try {
-			final String authKey = this.jwtUtils.getPayloads(command.authToken()).getSubject();
+			final String authKey = this.jwtUtils.getPayloads(command.authToken(), UserConstants.AUTH_TOKEN).getSubject();
 			command.validateAuthKey(authKey);
 		} catch (IllegalArgumentException e) {
 			throw new TiTiUserException(TiTiUserBusinessCodes.REGISTER_MEMBER_FAILURE_INVALID_AUTH_TOKEN);
