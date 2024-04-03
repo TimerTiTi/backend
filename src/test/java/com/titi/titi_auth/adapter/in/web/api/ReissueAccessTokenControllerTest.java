@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.titi.titi_auth.application.port.in.ReissueAccessTokenUseCase;
 import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
+import com.titi.titi_auth.common.TiTiAuthException;
 import com.titi.titi_common_lib.util.JacksonHelper;
 
 @WebMvcTest(controllers = ReissueAccessTokenController.class)
@@ -61,6 +62,28 @@ class ReissueAccessTokenControllerTest {
 			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_SUCCESS.getMessage()))
 			.andExpect(jsonPath("$.access_token").isNotEmpty())
 			.andExpect(jsonPath("$.refresh_token").isNotEmpty());
+		verify(reissueAccessTokenUseCase, times(1)).invoke(any(ReissueAccessTokenUseCase.Command.class));
+	}
+
+	@Test
+	@WithMockUser
+	void whenFailureToReissueAccessTokenThenCodeIsAU1005() throws Exception {
+		// given
+		final ReissueAccessTokenUseCase.Result result = ReissueAccessTokenUseCase.Result.builder()
+			.accessToken("accessToken")
+			.refreshToken("refreshToken")
+			.build();
+		given(reissueAccessTokenUseCase.invoke(any(ReissueAccessTokenUseCase.Command.class)))
+			.willThrow(new TiTiAuthException(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_FAILURE_INVALID_REFRESH_TOKEN));
+		final ReissueAccessTokenController.ReissueAccessTokenRequestBody requestBody = getReissueAccessTokenRequestBody();
+
+		// when
+		final ResultActions perform = mockReissueAccessToken(requestBody);
+
+		// then
+		perform.andExpect(status().isOk())
+			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_FAILURE_INVALID_REFRESH_TOKEN.getCode()))
+			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_FAILURE_INVALID_REFRESH_TOKEN.getMessage()));
 		verify(reissueAccessTokenUseCase, times(1)).invoke(any(ReissueAccessTokenUseCase.Command.class));
 	}
 
