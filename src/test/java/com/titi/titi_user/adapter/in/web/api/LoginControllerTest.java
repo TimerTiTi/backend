@@ -5,6 +5,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,6 +35,7 @@ class LoginControllerTest {
 		return LoginRequestBody.builder()
 			.username("test@gmail.com")
 			.encodedEncryptedPassword("encodedEncryptedPassword")
+			.deviceId(UUID.randomUUID().toString())
 			.build();
 	}
 

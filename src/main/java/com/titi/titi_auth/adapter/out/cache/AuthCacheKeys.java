@@ -8,7 +8,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AuthCacheKeys {
-	AUTH_CODE("ac", 5 * 60 * SECONDS);
+	AUTH_CODE("ac", 5 * 60 * SECONDS),
+	REFRESH_TOKEN("rt", 14 * 24 * 60 * 60 * SECONDS);
 
 	private final String prefix;
 	private final long timeToLive;
