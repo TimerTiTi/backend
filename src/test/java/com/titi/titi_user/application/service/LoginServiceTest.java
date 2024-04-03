@@ -16,10 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.titi.titi_common_lib.util.JwtUtils;
 import com.titi.titi_crypto_lib.constant.AESCipherModes;
 import com.titi.titi_crypto_lib.util.AESUtils;
 import com.titi.titi_user.application.port.in.LoginUseCase;
+import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
 import com.titi.titi_user.common.TiTiUserException;
 import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
@@ -41,7 +41,7 @@ class LoginServiceTest {
 	private PasswordEncoder passwordEncoder;
 
 	@Mock
-	private JwtUtils jwtUtils;
+	private GenerateAccessTokenPort generateAccessTokenPort;
 
 	@Mock
 	private FindMemberPort findMemberPort;
@@ -62,7 +62,8 @@ class LoginServiceTest {
 		given(mockMember.password()).willReturn(BCRYPTED_PASSWORD);
 		given(findMemberPort.invoke(any(Member.class))).willReturn(Optional.of(mockMember));
 		given(passwordEncoder.matches(RAW_PASSWORD, BCRYPTED_PASSWORD)).willReturn(true);
-		given(jwtUtils.generate(any(JwtUtils.Payload.class))).willReturn(JWT);
+		given(generateAccessTokenPort.invoke(any(GenerateAccessTokenPort.Command.class)))
+			.willReturn(GenerateAccessTokenPort.Result.builder().accessToken(JWT).refreshToken(JWT).build());
 
 		// when
 		final LoginUseCase.Result result = loginService.invoke(
@@ -78,7 +79,7 @@ class LoginServiceTest {
 		assertThat(result.refreshToken()).isNotBlank();
 		verify(findMemberPort, times(1)).invoke(any(Member.class));
 		verify(passwordEncoder, times(1)).matches(RAW_PASSWORD, BCRYPTED_PASSWORD);
-		verify(jwtUtils, times(2)).generate(any(JwtUtils.Payload.class));
+		verify(generateAccessTokenPort, times(1)).invoke(any(GenerateAccessTokenPort.Command.class));
 	}
 
 	@Test
@@ -98,7 +99,7 @@ class LoginServiceTest {
 		assertThatCode(throwingCallable).isInstanceOf(TiTiUserException.class);
 		verify(findMemberPort, times(1)).invoke(any(Member.class));
 		verify(passwordEncoder, never()).matches(RAW_PASSWORD, BCRYPTED_PASSWORD);
-		verify(jwtUtils, never()).generate(any(JwtUtils.Payload.class));
+		verify(generateAccessTokenPort, never()).invoke(any(GenerateAccessTokenPort.Command.class));
 	}
 
 	@Test
@@ -121,7 +122,7 @@ class LoginServiceTest {
 		assertThatCode(throwingCallable).isInstanceOf(TiTiUserException.class);
 		verify(findMemberPort, times(1)).invoke(any(Member.class));
 		verify(passwordEncoder, times(1)).matches(RAW_PASSWORD, BCRYPTED_PASSWORD);
-		verify(jwtUtils, never()).generate(any(JwtUtils.Payload.class));
+		verify(generateAccessTokenPort, never()).invoke(any(GenerateAccessTokenPort.Command.class));
 	}
 
 }

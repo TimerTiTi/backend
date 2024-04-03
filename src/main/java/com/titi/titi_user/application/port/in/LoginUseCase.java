@@ -11,7 +11,8 @@ public interface LoginUseCase {
 	@Builder
 	record Command(
 		String username,
-		EncodedEncryptedPassword encodedEncryptedPassword
+		EncodedEncryptedPassword encodedEncryptedPassword,
+		String deviceId
 	) {
 
 	}

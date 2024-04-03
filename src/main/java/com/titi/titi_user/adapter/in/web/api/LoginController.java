@@ -34,6 +34,7 @@ class LoginController implements UserApi {
 			LoginUseCase.Command.builder()
 				.username(requestBody.username())
 				.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(requestBody.encodedEncryptedPassword()).build())
+				.deviceId(requestBody.deviceId())
 				.build()
 		);
 		return ResponseEntity.status(TiTiUserBusinessCodes.LOGIN_SUCCESS.getStatus())
@@ -58,7 +59,11 @@ class LoginController implements UserApi {
 			description = "it is encrypted using AES-256 to wrap the raw_password then encoded using base64url.",
 			requiredMode = Schema.RequiredMode.REQUIRED,
 			example = "6o171NOMWMJ2BMgouXrOr82lFLFFo-hA9qphcA=="
-		) @NotBlank String encodedEncryptedPassword
+		) @NotBlank String encodedEncryptedPassword,
+		@Schema(
+			description = "An identifier that distinguishes the device. It can be obtained through the IssueDeviceId API.",
+			requiredMode = Schema.RequiredMode.REQUIRED
+		) @NotBlank String deviceId
 	) {
 
 	}
