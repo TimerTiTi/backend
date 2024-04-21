@@ -18,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${TITI_SMTP_GMAIL_TEST_USERNAME}
-    password: ${TITI_SMTP_GMAIL_TEST_PASSWORD}
+    username: ${TITI_TEST_SMTP_GMAIL_USERNAME}
+    password: ${TITI_TEST_SMTP_GMAIL_PASSWORD}
     properties:
       mail:
         smtp:
