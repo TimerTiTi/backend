@@ -21,7 +21,9 @@ import com.titi.titi_crypto_lib.util.AESUtils;
 import com.titi.titi_user.application.port.in.LoginUseCase;
 import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
+import com.titi.titi_user.application.port.out.persistence.UpdateDeviceLastAccessPort;
 import com.titi.titi_user.common.TiTiUserException;
+import com.titi.titi_user.domain.device.Device;
 import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
 import com.titi.titi_user.domain.member.Member;
 
@@ -46,6 +48,9 @@ class LoginServiceTest {
 	@Mock
 	private FindMemberPort findMemberPort;
 
+	@Mock
+	private UpdateDeviceLastAccessPort updateDeviceLastAccessPort;
+
 	@InjectMocks
 	private LoginService loginService;
 
@@ -64,6 +69,7 @@ class LoginServiceTest {
 		given(passwordEncoder.matches(RAW_PASSWORD, BCRYPTED_PASSWORD)).willReturn(true);
 		given(generateAccessTokenPort.invoke(any(GenerateAccessTokenPort.Command.class)))
 			.willReturn(GenerateAccessTokenPort.Result.builder().accessToken(JWT).refreshToken(JWT).build());
+		given(updateDeviceLastAccessPort.invoke(any(Device.class))).willReturn(mock(Device.class));
 
 		// when
 		final LoginUseCase.Result result = loginService.invoke(

@@ -1,5 +1,7 @@
 package com.titi.titi_user.application.port.in;
 
+import org.springframework.lang.Nullable;
+
 import lombok.Builder;
 
 import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
@@ -12,7 +14,8 @@ public interface LoginUseCase {
 	record Command(
 		String username,
 		EncodedEncryptedPassword encodedEncryptedPassword,
-		String deviceId
+		@Nullable String deviceId,
+		@Nullable String deviceType
 	) {
 
 	}
@@ -20,7 +23,8 @@ public interface LoginUseCase {
 	@Builder
 	record Result(
 		String accessToken,
-		String refreshToken
+		String refreshToken,
+		@Nullable String deviceId
 	) {
 
 	}

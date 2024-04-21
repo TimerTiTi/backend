@@ -42,6 +42,18 @@ CREATE TRIGGER generate_hashcode
     FOR EACH ROW
     SET NEW.hashcode = generate_unique_hash_code();
 
+CREATE TABLE IF NOT EXISTS devices
+(
+    uuid             BINARY(16)  NOT NULL,
+    member_id        BIGINT      NOT NULL COMMENT '회원 PK',
+    device_type      VARCHAR(255) COMMENT '기기 유형',
+    last_accessed_at DATETIME(6) NOT NULL COMMENT '최근 접속 일시',
+    created_at       DATETIME(6) NOT NULL COMMENT '생성 일시',
+    updated_at       DATETIME(6) NOT NULL COMMENT '수정 일시',
+    PRIMARY KEY (uuid),
+    CONSTRAINT fk_devices_member_id FOREIGN KEY (member_id) REFERENCES members (id)
+) COMMENT '기기';
+
 CREATE TABLE IF NOT EXISTS oauth2_infos
 (
     id                   BIGINT AUTO_INCREMENT,
