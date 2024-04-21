@@ -3,13 +3,16 @@ package com.titi.titi_user.adapter.in.web.api;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -17,6 +20,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
+import com.titi.titi_common_lib.util.HttpRequestHeaderParser;
 import com.titi.titi_user.application.port.in.LoginUseCase;
 import com.titi.titi_user.common.TiTiUserBusinessCodes;
 import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
@@ -29,12 +33,17 @@ class LoginController implements UserApi {
 
 	@Operation(summary = "login API", description = "You have successfully logged in.")
 	@PostMapping(value = "/members/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<LoginResponseBody> login(@Valid @RequestBody LoginRequestBody requestBody) {
+	public ResponseEntity<LoginResponseBody> login(
+		@Parameter(example = "mozilla/5.0 (iphone; cpu iphone os 15_0_1 like mac os x) applewebkit/605.1.15 (khtml, like gecko) version/15.0 mobile/15e148 safari/604.1")
+		@RequestHeader(name = "User-Agent", required = false) String userAgent,
+		@Valid @RequestBody LoginRequestBody requestBody
+	) {
 		final LoginUseCase.Result result = this.loginUseCase.invoke(
 			LoginUseCase.Command.builder()
 				.username(requestBody.username())
 				.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(requestBody.encodedEncryptedPassword()).build())
 				.deviceId(requestBody.deviceId())
+				.deviceType(userAgent == null ? null : HttpRequestHeaderParser.parseSystemInformationFromUserAgent(userAgent))
 				.build()
 		);
 		return ResponseEntity.status(TiTiUserBusinessCodes.LOGIN_SUCCESS.getStatus())
@@ -44,6 +53,7 @@ class LoginController implements UserApi {
 					.message(TiTiUserBusinessCodes.LOGIN_SUCCESS.getMessage())
 					.accessToken(result.accessToken())
 					.refreshToken(result.refreshToken())
+					.deviceId(result.deviceId())
 					.build()
 			);
 	}
@@ -61,9 +71,8 @@ class LoginController implements UserApi {
 			example = "6o171NOMWMJ2BMgouXrOr82lFLFFo-hA9qphcA=="
 		) @NotBlank String encodedEncryptedPassword,
 		@Schema(
-			description = "An identifier that distinguishes the device. It can be obtained through the IssueDeviceId API.",
-			requiredMode = Schema.RequiredMode.REQUIRED
-		) @NotBlank String deviceId
+			description = "An identifier that distinguishes the device. If null, a new deviceId is issued."
+		) @Nullable String deviceId
 	) {
 
 	}
@@ -82,7 +91,10 @@ class LoginController implements UserApi {
 		) String accessToken,
 		@Schema(
 			description = "Refresh Token for reissuing the Access Token (Validity : 2 weeks)"
-		) String refreshToken
+		) String refreshToken,
+		@Schema(
+			description = "An identifier that distinguishes the device. deviceId is included only if it has been newly issued."
+		) @Nullable String deviceId
 	) {
 
 	}

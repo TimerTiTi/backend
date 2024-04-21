@@ -11,7 +11,7 @@ public final class Constants {
 	public static final String DOT = ".";
 	public static final String UNDERSCORE = "_";
 
-
+	public static final int EOS = -1;
 	public static final int MILLI_SECONDS = 1;
 	public static final int SECONDS = 1;
 }

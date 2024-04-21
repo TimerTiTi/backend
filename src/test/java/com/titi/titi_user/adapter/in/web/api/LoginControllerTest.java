@@ -5,8 +5,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -35,12 +33,13 @@ class LoginControllerTest {
 		return LoginRequestBody.builder()
 			.username("test@gmail.com")
 			.encodedEncryptedPassword("encodedEncryptedPassword")
-			.deviceId(UUID.randomUUID().toString())
+			.deviceId("550e8400-e29b-41d4-a716-446655440000")
 			.build();
 	}
 
 	private ResultActions mockRegisterMember(LoginRequestBody requestBody) throws Exception {
 		return mockMvc.perform(post("/api/user/members/login")
+			.header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1")
 			.content(JacksonHelper.toJson(requestBody))
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
@@ -55,6 +54,7 @@ class LoginControllerTest {
 			LoginUseCase.Result.builder()
 				.accessToken("accessToken")
 				.refreshToken("refreshToken")
+				.deviceId("550e8400-e29b-41d4-a716-446655440000")
 				.build()
 		);
 
@@ -66,7 +66,8 @@ class LoginControllerTest {
 			.andExpect(jsonPath("$.code").value(TiTiUserBusinessCodes.LOGIN_SUCCESS.getCode()))
 			.andExpect(jsonPath("$.message").value(TiTiUserBusinessCodes.LOGIN_SUCCESS.getMessage()))
 			.andExpect(jsonPath("$.access_token").isNotEmpty())
-			.andExpect(jsonPath("$.refresh_token").isNotEmpty());
+			.andExpect(jsonPath("$.refresh_token").isNotEmpty())
+			.andExpect(jsonPath("$.device_id").isNotEmpty());
 		verify(loginUseCase, times(1)).invoke(any(LoginUseCase.Command.class));
 	}
 
