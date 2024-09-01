@@ -60,8 +60,8 @@ class ReissueAccessTokenControllerTest {
 		perform.andExpect(status().isOk())
 			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_SUCCESS.getCode()))
 			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_SUCCESS.getMessage()))
-			.andExpect(jsonPath("$.access_token").isNotEmpty())
-			.andExpect(jsonPath("$.refresh_token").isNotEmpty());
+			.andExpect(jsonPath("$.accessToken").isNotEmpty())
+			.andExpect(jsonPath("$.refreshToken").isNotEmpty());
 		verify(reissueAccessTokenUseCase, times(1)).invoke(any(ReissueAccessTokenUseCase.Command.class));
 	}
 
@@ -69,10 +69,6 @@ class ReissueAccessTokenControllerTest {
 	@WithMockUser
 	void whenFailureToReissueAccessTokenThenCodeIsAU1005() throws Exception {
 		// given
-		final ReissueAccessTokenUseCase.Result result = ReissueAccessTokenUseCase.Result.builder()
-			.accessToken("accessToken")
-			.refreshToken("refreshToken")
-			.build();
 		given(reissueAccessTokenUseCase.invoke(any(ReissueAccessTokenUseCase.Command.class)))
 			.willThrow(new TiTiAuthException(TiTiAuthBusinessCodes.REISSUE_ACCESS_TOKEN_FAILURE_INVALID_REFRESH_TOKEN));
 		final ReissueAccessTokenController.ReissueAccessTokenRequestBody requestBody = getReissueAccessTokenRequestBody();

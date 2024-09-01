@@ -61,7 +61,7 @@ class GenerateAuthCodeControllerTest {
 		perform.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getCode()))
 			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.GENERATE_AUTH_CODE_SUCCESS.getMessage()))
-			.andExpect(jsonPath("$.auth_key").exists());
+			.andExpect(jsonPath("$.authKey").exists());
 	}
 
 	@Test

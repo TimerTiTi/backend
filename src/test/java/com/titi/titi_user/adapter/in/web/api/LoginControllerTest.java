@@ -65,9 +65,9 @@ class LoginControllerTest {
 		perform.andExpect(status().isOk())
 			.andExpect(jsonPath("$.code").value(TiTiUserBusinessCodes.LOGIN_SUCCESS.getCode()))
 			.andExpect(jsonPath("$.message").value(TiTiUserBusinessCodes.LOGIN_SUCCESS.getMessage()))
-			.andExpect(jsonPath("$.access_token").isNotEmpty())
-			.andExpect(jsonPath("$.refresh_token").isNotEmpty())
-			.andExpect(jsonPath("$.device_id").isNotEmpty());
+			.andExpect(jsonPath("$.accessToken").isNotEmpty())
+			.andExpect(jsonPath("$.refreshToken").isNotEmpty())
+			.andExpect(jsonPath("$.deviceId").isNotEmpty());
 		verify(loginUseCase, times(1)).invoke(any(LoginUseCase.Command.class));
 	}
 

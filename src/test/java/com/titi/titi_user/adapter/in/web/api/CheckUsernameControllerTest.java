@@ -60,7 +60,7 @@ class CheckUsernameControllerTest {
 		perform.andExpect(status().isOk())
 			.andExpect(jsonPath("$.code").value(businessCodes.getCode()))
 			.andExpect(jsonPath("$.message").value(businessCodes.getMessage()))
-			.andExpect(jsonPath("$.is_present").value(isPresent));
+			.andExpect(jsonPath("$.isPresent").value(isPresent));
 	}
 
 }

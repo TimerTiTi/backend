@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -45,15 +43,14 @@ class GenerateAuthCodeController implements AuthApi {
 
 	private GenerateAuthCodeUseCase.Result generateAuthCodeForEmail(GenerateAuthCodeRequestBody requestBody) {
 		return this.generateAuthCodeUseCase.invoke(
-				GenerateAuthCodeUseCase.Command.ToEmail.builder()
-					.authType(requestBody.authType())
-					.email(requestBody.targetValue())
-					.build()
-			);
+			GenerateAuthCodeUseCase.Command.ToEmail.builder()
+				.authType(requestBody.authType())
+				.email(requestBody.targetValue())
+				.build()
+		);
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record GenerateAuthCodeRequestBody(
 		@Schema(
 			description = "Type of recipient for the issued authentication code.",
@@ -72,7 +69,6 @@ class GenerateAuthCodeController implements AuthApi {
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record GenerateAuthCodeResponseBody(
 		@Schema(
 			description = "TiTi Business code."
