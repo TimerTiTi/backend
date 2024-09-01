@@ -1,5 +1,6 @@
 package com.titi.titi_auth.adapter.out.pusher;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -12,22 +13,27 @@ import com.titi.titi_auth.common.TiTiAuthException;
 import com.titi.titi_auth.domain.AuthCode;
 import com.titi.titi_auth.domain.TargetType;
 import com.titi.titi_crypto_lib.util.HashingUtils;
-import com.titi.titi_pusher.adapter.in.internal.InternalSendMailGateway;
-import com.titi.titi_pusher.adapter.in.internal.dto.SendMessageResponse;
+import com.titi.titi_pusher.application.port.in.email.SendMailUseCase;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 class SendAuthCodePortAdapter implements SendAuthCodePort {
 
-	private final InternalSendMailGateway internalSendMailGateway;
+	private final SendMailUseCase sendMailUseCase;
+	/**
+	 * The official email account of the Timer TiTi service.
+	 */
+	@Value("${spring.mail.username}")
+	private String from;
 
 	@Override
 	public void invoke(AuthCode authCode) {
 		final String requestId = Logger.makeRequestId(authCode);
-		final SendMessageResponse response = switch (authCode.targetType()) {
-			case TargetType.EMAIL -> this.internalSendMailGateway.sendSimpleMessage(
-				InternalSendMailGateway.SendSimpleMessageRequest.builder()
+		final SendMailUseCase.Result response = switch (authCode.targetType()) {
+			case TargetType.EMAIL -> this.sendMailUseCase.invoke(
+				SendMailUseCase.Command.ToSimpleMessage.builder()
+					.from(this.from)
 					.to(authCode.targetValue())
 					.subject(AuthMessageTemplates.GENERATE_AUTH_CODE.getSubject())
 					.text(String.format(AuthMessageTemplates.GENERATE_AUTH_CODE.getText(), authCode.authCode()))

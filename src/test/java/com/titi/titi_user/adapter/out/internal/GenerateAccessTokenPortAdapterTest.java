@@ -11,14 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.titi.titi_auth.adapter.in.internal.GenerateAccessTokenGateway;
+import com.titi.titi_auth.application.port.in.GenerateAccessTokenUseCase;
 import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
 
 @ExtendWith(MockitoExtension.class)
 class GenerateAccessTokenPortAdapterTest {
 
 	@Mock
-	private GenerateAccessTokenGateway generateAccessTokenGateway;
+	private GenerateAccessTokenUseCase generateAccessTokenUseCase;
 
 	@InjectMocks
 	private GenerateAccessTokenPortAdapter generateAccessTokenPortAdapter;
@@ -26,11 +26,10 @@ class GenerateAccessTokenPortAdapterTest {
 	@Test
 	void invoke() {
 		// given
-		final GenerateAccessTokenGateway.GenerateAccessTokenResponse response = GenerateAccessTokenGateway.GenerateAccessTokenResponse.builder()
-			.accessToken("accessToken")
-			.refreshToken("refreshToken")
-			.build();
-		given(generateAccessTokenGateway.invoke(any(GenerateAccessTokenGateway.GenerateAccessTokenRequest.class))).willReturn(response);
+		final GenerateAccessTokenUseCase.Result mockResult = mock(GenerateAccessTokenUseCase.Result.class);
+		given(mockResult.accessToken()).willReturn("accessToken");
+		given(mockResult.refreshToken()).willReturn("refreshToken");
+		given(generateAccessTokenUseCase.invoke(any(GenerateAccessTokenUseCase.Command.class))).willReturn(mockResult);
 
 		// when
 		final GenerateAccessTokenPort.Command command = GenerateAccessTokenPort.Command.builder()
@@ -41,8 +40,9 @@ class GenerateAccessTokenPortAdapterTest {
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result).usingRecursiveComparison().isEqualTo(response);
-		verify(generateAccessTokenGateway, times(1)).invoke(any(GenerateAccessTokenGateway.GenerateAccessTokenRequest.class));
+		assertThat(result.accessToken()).isEqualTo(mockResult.accessToken());
+		assertThat(result.refreshToken()).isEqualTo(mockResult.refreshToken());
+		verify(generateAccessTokenUseCase, times(1)).invoke(any(GenerateAccessTokenUseCase.Command.class));
 	}
 
 }

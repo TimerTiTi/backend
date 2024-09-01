@@ -4,26 +4,26 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import com.titi.titi_auth.adapter.in.internal.GenerateAccessTokenGateway;
+import com.titi.titi_auth.application.port.in.GenerateAccessTokenUseCase;
 import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
 
 @Component
 @RequiredArgsConstructor
 class GenerateAccessTokenPortAdapter implements GenerateAccessTokenPort {
 
-	private final GenerateAccessTokenGateway generateAccessTokenGateway;
+	private final GenerateAccessTokenUseCase generateAccessTokenUseCase;
 
 	@Override
 	public Result invoke(Command command) {
-		final GenerateAccessTokenGateway.GenerateAccessTokenResponse response = this.generateAccessTokenGateway.invoke(
-			GenerateAccessTokenGateway.GenerateAccessTokenRequest.builder()
+		final GenerateAccessTokenUseCase.Result result = this.generateAccessTokenUseCase.invoke(
+			GenerateAccessTokenUseCase.Command.builder()
 				.memberId(command.memberId())
 				.deviceId(command.deviceId())
 				.build()
 		);
 		return Result.builder()
-			.accessToken(response.accessToken())
-			.refreshToken(response.refreshToken())
+			.accessToken(result.accessToken())
+			.refreshToken(result.refreshToken())
 			.build();
 	}
 
