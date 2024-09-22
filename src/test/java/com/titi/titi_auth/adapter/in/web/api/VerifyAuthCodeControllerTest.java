@@ -58,7 +58,7 @@ class VerifyAuthCodeControllerTest {
 		perform.andExpect(status().isOk())
 			.andExpect(jsonPath("$.code").value(TiTiAuthBusinessCodes.VERIFY_AUTH_CODE_SUCCESS.getCode()))
 			.andExpect(jsonPath("$.message").value(TiTiAuthBusinessCodes.VERIFY_AUTH_CODE_SUCCESS.getMessage()))
-			.andExpect(jsonPath("$.auth_token").exists());
+			.andExpect(jsonPath("$.authToken").exists());
 	}
 
 	@Test

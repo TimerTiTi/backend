@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,7 +57,6 @@ class LoginController implements UserApi {
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record LoginRequestBody(
 		@Schema(
 			description = "username in Email format.",
@@ -78,7 +75,6 @@ class LoginController implements UserApi {
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record LoginResponseBody(
 		@Schema(
 			description = "TiTi Business code."

@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -44,7 +42,6 @@ public class VerifyAuthCodeController implements AuthApi {
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record VerifyAuthCodeRequestBody(
 		@Schema(
 			description = "The key required to validate the authentication code.",
@@ -59,7 +56,6 @@ public class VerifyAuthCodeController implements AuthApi {
 	}
 
 	@Builder
-	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public record VerifyAuthCodeResponseBody(
 		@Schema(
 			description = "TiTi Business code."
