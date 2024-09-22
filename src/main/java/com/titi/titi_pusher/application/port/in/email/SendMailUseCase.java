@@ -2,13 +2,9 @@ package com.titi.titi_pusher.application.port.in.email;
 
 import lombok.Builder;
 
-import com.titi.titi_pusher.domain.notification.Notification;
-import com.titi.titi_pusher.domain.notification.NotificationCategory;
-import com.titi.titi_pusher.domain.notification.ServiceInfo;
-
 public interface SendMailUseCase {
 
-	Notification invoke(Command command);
+	Result invoke(Command command);
 
 	sealed interface Command {
 
@@ -18,12 +14,20 @@ public interface SendMailUseCase {
 			String to,
 			String subject,
 			String text,
-			NotificationCategory notificationCategory,
-			ServiceInfo.ServiceName serviceName,
+			String notificationCategory,
+			String serviceName,
 			String serviceRequestId
 		) implements Command {
 
 		}
+
+	}
+
+	@Builder
+	record Result(
+		String messageId,
+		String messageStatus
+	) {
 
 	}
 

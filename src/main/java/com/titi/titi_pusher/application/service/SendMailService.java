@@ -11,6 +11,7 @@ import com.titi.titi_pusher.application.port.out.persistence.notification.Update
 import com.titi.titi_pusher.application.port.out.smtp.SendMailPort;
 import com.titi.titi_pusher.domain.email.SimpleMailMessage;
 import com.titi.titi_pusher.domain.notification.Notification;
+import com.titi.titi_pusher.domain.notification.NotificationCategory;
 import com.titi.titi_pusher.domain.notification.ServiceInfo;
 
 @Service
@@ -23,22 +24,26 @@ class SendMailService implements SendMailUseCase {
 
 	@Override
 	@Transactional
-	public Notification invoke(Command command) {
+	public Result invoke(Command command) {
 		return switch (command) {
 			case Command.ToSimpleMessage message -> {
-				final Notification notification = this.createNotification(message);
+				Notification notification = this.createNotification(message);
 				final boolean isSuccessful = this.sendNotification(notification, message);
-				yield this.finishNotification(notification, isSuccessful);
+				notification = this.finishNotification(notification, isSuccessful);
+				yield Result.builder()
+					.messageId(notification.notificationId().toString())
+					.messageStatus(notification.notificationStatus().name())
+					.build();
 			}
 		};
 	}
 
 	private Notification createNotification(Command.ToSimpleMessage message) {
 		final Notification notification = Notification.ofEmail(
-			message.notificationCategory(),
+			NotificationCategory.valueOf(message.notificationCategory()),
 			message.to(),
 			ServiceInfo.builder()
-				.name(message.serviceName())
+				.name(ServiceInfo.ServiceName.valueOf(message.serviceName()))
 				.requestId(message.serviceRequestId())
 				.build()
 		);
