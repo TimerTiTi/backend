@@ -1,4 +1,4 @@
-package com.titi.titi_user.application.port.in;
+package com.titi.titi_auth.application.port.in;
 
 import lombok.Builder;
 

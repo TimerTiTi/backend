@@ -1,4 +1,4 @@
-package com.titi.titi_user.adapter.in.web.api;
+package com.titi.titi_auth.adapter.in.web.api;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
@@ -16,13 +16,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
-import com.titi.titi_user.application.port.in.CheckUsernameUseCase;
-import com.titi.titi_user.common.TiTiUserBusinessCodes;
+import com.titi.titi_auth.application.port.in.CheckUsernameUseCase;
+import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 
 @Validated
 @RestController
 @RequiredArgsConstructor
-class CheckUsernameController implements UserApi {
+public class CheckUsernameController implements AuthApi {
 
 	private final CheckUsernameUseCase checkUsernameUseCase;
 
@@ -31,7 +31,7 @@ class CheckUsernameController implements UserApi {
 	@GetMapping(value = "/members/check", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CheckUsernameResponseBody> checkUsername(@NotBlank @Email @Length(max = 30) @RequestParam String username) {
 		final CheckUsernameUseCase.Result result = this.checkUsernameUseCase.invoke(CheckUsernameUseCase.Command.builder().username(username).build());
-		final TiTiUserBusinessCodes businessCodes = result.isPresent() ? TiTiUserBusinessCodes.ALREADY_EXISTS_USERNAME : TiTiUserBusinessCodes.DOES_NOT_EXIST_USERNAME;
+		final TiTiAuthBusinessCodes businessCodes = result.isPresent() ? TiTiAuthBusinessCodes.ALREADY_EXISTS_USERNAME : TiTiAuthBusinessCodes.DOES_NOT_EXIST_USERNAME;
 		return ResponseEntity.status(businessCodes.getStatus())
 			.body(
 				CheckUsernameResponseBody.builder()

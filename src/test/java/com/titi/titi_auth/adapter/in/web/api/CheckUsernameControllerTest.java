@@ -1,4 +1,4 @@
-package com.titi.titi_user.adapter.in.web.api;
+package com.titi.titi_auth.adapter.in.web.api;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
@@ -19,8 +19,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.titi.titi_user.application.port.in.CheckUsernameUseCase;
-import com.titi.titi_user.common.TiTiUserBusinessCodes;
+import com.titi.titi_auth.application.port.in.CheckUsernameUseCase;
+import com.titi.titi_auth.common.TiTiAuthBusinessCodes;
 
 @WebMvcTest(controllers = CheckUsernameController.class)
 class CheckUsernameControllerTest {
@@ -33,13 +33,13 @@ class CheckUsernameControllerTest {
 
 	private static Stream<Arguments> whenSuccessToCheckUsername() {
 		return Stream.of(
-			Arguments.of(false, TiTiUserBusinessCodes.DOES_NOT_EXIST_USERNAME),
-			Arguments.of(true, TiTiUserBusinessCodes.ALREADY_EXISTS_USERNAME)
+			Arguments.of(false, TiTiAuthBusinessCodes.DOES_NOT_EXIST_USERNAME),
+			Arguments.of(true, TiTiAuthBusinessCodes.ALREADY_EXISTS_USERNAME)
 		);
 	}
 
 	private ResultActions mockCheckUsername(String username) throws Exception {
-		return mockMvc.perform(get("/api/user/members/check")
+		return mockMvc.perform(get("/api/auth/members/check")
 			.queryParam("username", username)
 			.accept(MediaType.APPLICATION_JSON)
 			.with(csrf()));
@@ -48,7 +48,7 @@ class CheckUsernameControllerTest {
 	@ParameterizedTest
 	@MethodSource
 	@WithMockUser
-	void whenSuccessToCheckUsername(boolean isPresent, TiTiUserBusinessCodes businessCodes) throws Exception {
+	void whenSuccessToCheckUsername(boolean isPresent, TiTiAuthBusinessCodes businessCodes) throws Exception {
 		// given
 		given(checkUsernameUseCase.invoke(any())).willReturn(CheckUsernameUseCase.Result.builder().isPresent(isPresent).build());
 		final String username = "test@gmail.com";

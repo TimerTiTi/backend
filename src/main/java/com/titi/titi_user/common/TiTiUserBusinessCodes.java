@@ -7,8 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TiTiUserBusinessCodes {
 
-	DOES_NOT_EXIST_USERNAME(200, "USR1000", "The username does not exist."),
-	ALREADY_EXISTS_USERNAME(200, "USR1001", "The username already exists."),
 	REGISTER_MEMBER_SUCCESS(200, "USR1002", "Successfully completed the regular membership registration."),
 	REGISTER_MEMBER_FAILURE_INVALID_AUTH_TOKEN(200, "USR1003", "The registration has failed due to an invalid Auth Token."),
 	REGISTER_MEMBER_FAILURE_ALREADY_EXISTS_USERNAME(200, "USR1004", "The registration has failed as the username already exists."),
