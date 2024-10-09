@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS members
     created_at         DATETIME(6)                 NOT NULL COMMENT '생성 일시',
     updated_at         DATETIME(6)                 NOT NULL COMMENT '수정 일시',
     PRIMARY KEY (id),
-    CONSTRAINT fk_members_account_id FOREIGN KEY (account_id) REFERENCES accounts (id),
     UNIQUE INDEX uix_members_nickname (nickname, hashcode)
 ) COMMENT '회원';
 
