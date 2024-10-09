@@ -4,6 +4,8 @@ use titi;
 
 DELIMITER //
 
+DROP FUNCTION IF EXISTS generate_unique_hash_code;
+
 CREATE FUNCTION generate_unique_hash_code() RETURNS VARCHAR(8)
     DETERMINISTIC
 BEGIN
