@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS accounts
 (
     id             BIGINT AUTO_INCREMENT,
     username       VARCHAR(30)                                                          NOT NULL UNIQUE COMMENT '아이디(이메일)',
-    password       VARCHAR(255)                                                         NOT NULL COMMENT '비밀번호',
+    password VARCHAR(255) COMMENT '비밀번호',
     authority      ENUM ('MEMBER', 'ADMIN')                                             NOT NULL COMMENT '권한',
     account_status ENUM ('ACTIVATED', 'DEACTIVATED', 'SUSPENDED', 'BLOCKED', 'DELETED') NOT NULL COMMENT '계정 상태',
     created_at     DATETIME(6)                                                          NOT NULL COMMENT '생성 일시',
