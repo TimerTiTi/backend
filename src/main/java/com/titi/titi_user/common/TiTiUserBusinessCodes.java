@@ -14,6 +14,7 @@ public enum TiTiUserBusinessCodes {
 	LOGIN_FAILURE_MISMATCHED_MEMBER_INFORMATION(200, "USR1006", "Login failed due to mismatched member information."),
 
 	AUTH_KEY_MISMATCHED_REGISTRATION_INFORMATION(400, "USR7000", "The authentication key does not match the registration information."),
+	UNAVAILABLE_USERNAME(400, "USR7001", "The username is unavailable."),
 	;
 
 	private final int status;

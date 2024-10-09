@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.titi.JpaTestBase;
 import com.titi.titi_user.data.jpa.entity.MemberEntity;
 import com.titi.titi_user.data.jpa.repository.MemberEntityRepository;
-import com.titi.titi_user.domain.member.AccountStatus;
-import com.titi.titi_user.domain.member.Authority;
 import com.titi.titi_user.domain.member.MembershipType;
 import com.titi.titi_user.domain.member.ProfileImage;
 
@@ -32,11 +30,8 @@ class MemberEntityQuerydslImplTest extends JpaTestBase {
 			// given
 			final MemberEntity savedEntity = memberEntityRepository.save(
 				MemberEntity.builder()
-					.username("test@gmail.com")
-					.password("password")
-					.accountStatus(AccountStatus.ACTIVATED)
-					.authority(Authority.MEMBER)
 					.nickname("nickname")
+					.accountId(1L)
 					.membershipType(MembershipType.NORMAL)
 					.profileImage(ProfileImage.defaultInstance())
 					.build()
@@ -45,10 +40,9 @@ class MemberEntityQuerydslImplTest extends JpaTestBase {
 			// when
 			final MemberEntity entity = MemberEntity.builder()
 				.id(savedEntity.getId())
+				.accountId(1L)
 				.nickname(savedEntity.getNickname())
-				.username(savedEntity.getUsername())
 				.hashcode(savedEntity.getHashcode())
-				.authority(savedEntity.getAuthority())
 				.membershipType(savedEntity.getMembershipType())
 				.build();
 			final Optional<MemberEntity> result = memberEntityQuerydsl.findByEntity(entity);
@@ -62,9 +56,7 @@ class MemberEntityQuerydslImplTest extends JpaTestBase {
 			// given
 			final MemberEntity entity = MemberEntity.builder()
 				.id(1L)
-				.username("test@gmail.com")
-				.accountStatus(AccountStatus.ACTIVATED)
-				.authority(Authority.MEMBER)
+				.accountId(1L)
 				.nickname("nickname")
 				.membershipType(MembershipType.NORMAL)
 				.build();

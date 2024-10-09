@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
 import com.titi.titi_user.common.TiTiUserBusinessCodes;
-import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ class RegisterMemberController implements UserApi {
 		this.registerMemberUseCase.invoke(
 			RegisterMemberUseCase.Command.builder()
 				.username(requestBody.username())
-				.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(requestBody.encodedEncryptedPassword()).build())
+				.encodedEncryptedPassword(requestBody.encodedEncryptedPassword())
 				.nickname(requestBody.nickname())
 				.authToken(requestBody.authToken())
 				.build()

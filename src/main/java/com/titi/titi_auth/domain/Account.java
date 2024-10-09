@@ -6,7 +6,7 @@ import lombok.Builder;
 public record Account(
 	Long id,
 	String username,
-	String password,
+	String encodedEncryptedPassword,
 	Authority authority,
 	AccountStatus accountStatus
 ) {

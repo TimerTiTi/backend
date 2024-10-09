@@ -18,10 +18,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
+import com.titi.titi_auth.domain.EncodedEncryptedPassword;
 import com.titi.titi_common_lib.util.HttpRequestHeaderParser;
 import com.titi.titi_user.application.port.in.LoginUseCase;
 import com.titi.titi_user.common.TiTiUserBusinessCodes;
-import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
 
 @RestController
 @RequiredArgsConstructor

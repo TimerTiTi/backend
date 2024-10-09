@@ -14,8 +14,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import com.titi.titi_user.domain.oauth2.OAuth2Metadata;
 import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
+import com.titi.titi_auth.data.jpa.entity.AccountEntity;
+import com.titi.titi_user.domain.oauth2.OAuth2Metadata;
 
 @Entity(name = "oauth2_info")
 @Getter
@@ -29,15 +30,15 @@ public class OAuth2InfoEntity extends BaseEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id", nullable = false, updatable = false)
-	private MemberEntity memberEntity;
+	@JoinColumn(name = "account_id", nullable = false, updatable = false)
+	private AccountEntity accountEntity;
 
 	@Embedded
 	private OAuth2Metadata metadata;
 
-	public static OAuth2InfoEntity create(MemberEntity memberEntity, OAuth2Metadata metadata) {
+	public static OAuth2InfoEntity create(AccountEntity accountEntity, OAuth2Metadata metadata) {
 		return OAuth2InfoEntity.builder()
-			.memberEntity(memberEntity)
+			.accountEntity(accountEntity)
 			.metadata(metadata)
 			.build();
 	}

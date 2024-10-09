@@ -13,8 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.titi.titi_user.data.jpa.entity.MemberEntity;
 import com.titi.titi_user.data.jpa.entity.mapper.EntityMapper;
 import com.titi.titi_user.data.jpa.repository.MemberEntityRepository;
-import com.titi.titi_user.domain.member.AccountStatus;
-import com.titi.titi_user.domain.member.Authority;
 import com.titi.titi_user.domain.member.Member;
 import com.titi.titi_user.domain.member.MembershipType;
 import com.titi.titi_user.domain.member.ProfileImage;
@@ -45,13 +43,9 @@ class SaveMemberPortAdapterTest {
 	void whenMemberIsisNullThenSuccessfullySaveMember() {
 		// given
 		final Member member = Member.builder()
-			.username("test@gmail.com")
-			.password("password")
 			.nickname("nickname")
 			.profileImage(ProfileImage.defaultInstance())
-			.authority(Authority.MEMBER)
 			.membershipType(MembershipType.NORMAL)
-			.accountStatus(AccountStatus.ACTIVATED)
 			.build();
 
 		final MemberEntity memberEntity = EntityMapper.INSTANCE.toEntity(member);

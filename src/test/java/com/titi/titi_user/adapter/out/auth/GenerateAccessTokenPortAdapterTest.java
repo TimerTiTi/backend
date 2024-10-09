@@ -1,4 +1,4 @@
-package com.titi.titi_user.adapter.out.internal;
+package com.titi.titi_user.adapter.out.auth;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.titi.titi_auth.application.port.in.GenerateAccessTokenUseCase;
-import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
+import com.titi.titi_user.application.port.out.auth.GenerateAccessTokenPort;
 
 @ExtendWith(MockitoExtension.class)
 class GenerateAccessTokenPortAdapterTest {

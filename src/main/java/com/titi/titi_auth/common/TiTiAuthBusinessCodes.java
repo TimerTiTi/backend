@@ -18,6 +18,7 @@ public enum TiTiAuthBusinessCodes {
 
 	GENERATE_AUTH_CODE_FAILURE(500, "AU7000", "Failed to generate and transmit the authentication code. Please try again later."),
 	VERIFY_AUTH_CODE_FAILURE(500, "AU7001", "Authentication code verification failed. Please try again later."),
+	UNAVAILABLE_USERNAME(400, "AU7002", "The username is unavailable."),
 	CACHE_SERVER_ERROR(500, "AU9000", "Cache server error. Please try again later"),
 	;
 

@@ -15,8 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
-import com.titi.titi_user.domain.member.AccountStatus;
-import com.titi.titi_user.domain.member.Authority;
 import com.titi.titi_user.domain.member.MembershipType;
 import com.titi.titi_user.domain.member.ProfileImage;
 
@@ -31,25 +29,14 @@ public class MemberEntity extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
-	private String username;
-
-	@Column(nullable = false)
-	private String password;
+	@Column(nullable = false, updatable = false)
+	private Long accountId;
 
 	@Column(nullable = false)
 	private String nickname;
 
 	@Column(nullable = false, insertable = false, updatable = false)
 	private String hashcode;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(nullable = false)
-	private Authority authority;
-
-	@Enumerated(value = EnumType.STRING)
-	@Column(nullable = false)
-	private AccountStatus accountStatus;
 
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)

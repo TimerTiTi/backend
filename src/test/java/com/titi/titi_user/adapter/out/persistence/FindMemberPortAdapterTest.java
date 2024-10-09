@@ -13,8 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.titi.titi_user.data.jpa.entity.MemberEntity;
 import com.titi.titi_user.data.jpa.repository.MemberEntityRepository;
-import com.titi.titi_user.domain.member.AccountStatus;
-import com.titi.titi_user.domain.member.Authority;
 import com.titi.titi_user.domain.member.Member;
 import com.titi.titi_user.domain.member.MembershipType;
 import com.titi.titi_user.domain.member.ProfileImage;
@@ -31,13 +29,8 @@ class FindMemberPortAdapterTest {
 	@Test
 	void whenMemberEntityIsPresent() {
 		// given
-		final String username = "test@gmail.com";
 		final MemberEntity mockMemberEntity = MemberEntity.builder()
 			.id(1L)
-			.username(username)
-			.password("password")
-			.accountStatus(AccountStatus.ACTIVATED)
-			.authority(Authority.MEMBER)
 			.hashcode("123456")
 			.nickname("nickname")
 			.membershipType(MembershipType.NORMAL)
@@ -46,7 +39,7 @@ class FindMemberPortAdapterTest {
 		given(memberEntityRepository.findByEntity(any())).willReturn(Optional.of(mockMemberEntity));
 
 		// when
-		final Member member = Member.builder().username(username).build();
+		final Member member = Member.builder().id(mockMemberEntity.getId()).build();
 		final Optional<Member> result = findMemberPortAdapter.invoke(member);
 
 		// then
@@ -56,11 +49,10 @@ class FindMemberPortAdapterTest {
 	@Test
 	void whenMemberEntityIsEmpty() {
 		// given
-		final String username = "test@gmail.com";
 		given(memberEntityRepository.findByEntity(any())).willReturn(Optional.empty());
 
 		// when
-		final Member member = Member.builder().username(username).build();
+		final Member member = Member.builder().id(1L).build();
 		final Optional<Member> result = findMemberPortAdapter.invoke(member);
 
 		// then

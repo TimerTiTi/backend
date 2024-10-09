@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_user.application.port.in.LoginUseCase;
-import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
+import com.titi.titi_user.application.port.out.auth.GenerateAccessTokenPort;
 import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
 import com.titi.titi_user.application.port.out.persistence.UpdateDeviceLastAccessPort;
 import com.titi.titi_user.common.TiTiUserBusinessCodes;
@@ -33,10 +33,10 @@ class LoginService implements LoginUseCase {
 	@Override
 	@Transactional
 	public Result invoke(Command command) {
-		final Member member = this.findMemberPort.invoke(Member.builder().username(command.username()).build())
+		final Member member = this.findMemberPort.invoke(Member.builder()/*.username(command.username())*/.build())
 			.orElseThrow(() -> new TiTiUserException(TiTiUserBusinessCodes.LOGIN_FAILURE_MISMATCHED_MEMBER_INFORMATION));
 		final String rawPassword = command.encodedEncryptedPassword().getRawPassword(this.secretKey.getBytes());
-		this.validatePassword(rawPassword, member);
+		/*this.validatePassword(rawPassword, member);*/
 
 		final String generatedDeviceId = command.deviceId() == null ? UUID.randomUUID().toString() : null;
 		final Device device = Device.builder()
@@ -62,10 +62,10 @@ class LoginService implements LoginUseCase {
 			.build();
 	}
 
-	private void validatePassword(String rawPassword, Member member) {
+	/*private void validatePassword(String rawPassword, Member member) {
 		if (!this.passwordEncoder.matches(rawPassword, member.password())) {
 			throw new TiTiUserException(TiTiUserBusinessCodes.LOGIN_FAILURE_MISMATCHED_MEMBER_INFORMATION);
 		}
-	}
+	}*/
 
 }

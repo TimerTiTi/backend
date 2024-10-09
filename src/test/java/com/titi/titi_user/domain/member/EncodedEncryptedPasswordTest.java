@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.titi.exception.TiTiException;
+import com.titi.titi_auth.domain.EncodedEncryptedPassword;
 import com.titi.titi_crypto_lib.constant.AESCipherModes;
 import com.titi.titi_crypto_lib.util.AESUtils;
 

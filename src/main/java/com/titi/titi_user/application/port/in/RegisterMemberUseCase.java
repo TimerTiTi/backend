@@ -5,7 +5,6 @@ import lombok.Builder;
 import com.titi.titi_crypto_lib.util.HashingUtils;
 import com.titi.titi_user.common.TiTiUserBusinessCodes;
 import com.titi.titi_user.common.TiTiUserException;
-import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
 
 public interface RegisterMemberUseCase {
 
@@ -14,7 +13,7 @@ public interface RegisterMemberUseCase {
 	@Builder
 	record Command(
 		String username,
-		EncodedEncryptedPassword encodedEncryptedPassword,
+		String encodedEncryptedPassword,
 		String nickname,
 		String authToken
 	) {
