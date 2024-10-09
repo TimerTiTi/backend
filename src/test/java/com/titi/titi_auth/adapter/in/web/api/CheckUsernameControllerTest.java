@@ -39,7 +39,7 @@ class CheckUsernameControllerTest {
 	}
 
 	private ResultActions mockCheckUsername(String username) throws Exception {
-		return mockMvc.perform(get("/api/auth/members/check")
+		return mockMvc.perform(get("/api/auth/accounts/check")
 			.queryParam("username", username)
 			.accept(MediaType.APPLICATION_JSON)
 			.with(csrf()));

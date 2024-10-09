@@ -28,7 +28,7 @@ public class CheckUsernameController implements AuthApi {
 
 	@Operation(summary = "checkUsername API", description = "Check if the username exists.")
 	@Parameter(name = "username", description = "Username in Email format.", required = true)
-	@GetMapping(value = "/members/check", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/accounts/check", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<CheckUsernameResponseBody> checkUsername(@NotBlank @Email @Length(max = 30) @RequestParam String username) {
 		final CheckUsernameUseCase.Result result = this.checkUsernameUseCase.invoke(CheckUsernameUseCase.Command.builder().username(username).build());
 		final TiTiAuthBusinessCodes businessCodes = result.isPresent() ? TiTiAuthBusinessCodes.ALREADY_EXISTS_USERNAME : TiTiAuthBusinessCodes.DOES_NOT_EXIST_USERNAME;
