@@ -5,12 +5,9 @@ import lombok.Builder;
 @Builder
 public record Member(
 	Long id,
-	String username,
-	String password,
+	Long accountId,
 	String nickname,
 	String hashcode,
-	Authority authority,
-	AccountStatus accountStatus,
 	MembershipType membershipType,
 	ProfileImage profileImage
 ) {

@@ -1,7 +1,6 @@
-package com.titi.titi_user.data.jpa.entity;
+package com.titi.titi_auth.data.jpa.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,34 +14,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import com.titi.infrastructure.persistence.jpa.entity.BaseEntity;
-import com.titi.titi_user.domain.member.MembershipType;
-import com.titi.titi_user.domain.member.ProfileImage;
+import com.titi.titi_auth.domain.AccountStatus;
+import com.titi.titi_auth.domain.Authority;
 
-@Entity(name = "members")
+@Entity(name = "accounts")
 @Getter
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberEntity extends BaseEntity {
+public class AccountEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, updatable = false)
-	private Long accountId;
+	@Column(nullable = false)
+	private String username;
 
 	@Column(nullable = false)
-	private String nickname;
-
-	@Column(nullable = false, insertable = false, updatable = false)
-	private String hashcode;
+	private String password;
 
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
-	private MembershipType membershipType;
+	private Authority authority;
 
-	@Embedded
-	private ProfileImage profileImage;
+	@Enumerated(value = EnumType.STRING)
+	@Column(nullable = false)
+	private AccountStatus accountStatus;
 
 }

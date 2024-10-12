@@ -1,7 +1,9 @@
-package com.titi.titi_user.application.service;
+package com.titi.titi_auth.application.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
@@ -11,26 +13,25 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.titi.titi_user.application.port.in.CheckUsernameUseCase;
-import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
-import com.titi.titi_user.domain.member.Member;
+import com.titi.titi_auth.application.port.in.CheckUsernameUseCase;
+import com.titi.titi_auth.application.port.out.persistence.FindAccountPort;
+import com.titi.titi_auth.domain.Account;
 
 @ExtendWith(MockitoExtension.class)
 class CheckUsernameServiceTest {
-
 	@Mock
-	private FindMemberPort findMemberPort;
+	private FindAccountPort findAccountPort;
 
 	@InjectMocks
 	private CheckUsernameService checkUsernameService;
 
 	@Test
-	void whenMemberIsPresentWithUsernameThenReturnTrue() {
-	    // given
+	void whenAccountIsPresentWithUsernameThenReturnTrue() {
+		// given
 		final String username = "test@gmail.com";
-		given(findMemberPort.invoke(any())).willReturn(Optional.of(mock(Member.class)));
+		given(findAccountPort.invoke(any())).willReturn(Optional.of(mock(Account.class)));
 
-	    // when
+		// when
 		final CheckUsernameUseCase.Result result = checkUsernameService.invoke(CheckUsernameUseCase.Command.builder().username(username).build());
 
 		// then
@@ -40,16 +41,15 @@ class CheckUsernameServiceTest {
 
 	@Test
 	void whenMemberIsNotPresentWithUsernameThenReturnFalse() {
-	    // given
+		// given
 		final String username = "test@gmail.com";
-		given(findMemberPort.invoke(any())).willReturn(Optional.empty());
+		given(findAccountPort.invoke(any())).willReturn(Optional.empty());
 
-	    // when
+		// when
 		final CheckUsernameUseCase.Result result = checkUsernameService.invoke(CheckUsernameUseCase.Command.builder().username(username).build());
 
 		// then
 		assertThat(result).isNotNull();
 		assertThat(result.isPresent()).isFalse();
 	}
-
 }

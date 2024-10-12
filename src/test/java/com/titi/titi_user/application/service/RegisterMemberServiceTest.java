@@ -4,17 +4,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Base64;
-import java.util.Optional;
 
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import io.jsonwebtoken.Claims;
 
@@ -24,11 +20,9 @@ import com.titi.titi_crypto_lib.util.AESUtils;
 import com.titi.titi_crypto_lib.util.HashingUtils;
 import com.titi.titi_user.application.common.constant.UserConstants;
 import com.titi.titi_user.application.port.in.RegisterMemberUseCase;
-import com.titi.titi_user.application.port.out.persistence.FindMemberPort;
+import com.titi.titi_user.application.port.out.auth.CreateAccountPort;
 import com.titi.titi_user.application.port.out.persistence.SaveMemberPort;
 import com.titi.titi_user.common.TiTiUserException;
-import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
-import com.titi.titi_user.domain.member.Member;
 
 @ExtendWith(MockitoExtension.class)
 class RegisterMemberServiceTest {
@@ -43,37 +37,28 @@ class RegisterMemberServiceTest {
 	private static final String ENCODED_ENCRYPTED_PASSWORD = Base64.getUrlEncoder().encodeToString(ENCRYPTED_PASSWORD);
 
 	@Mock
-	private PasswordEncoder passwordEncoder;
-
-	@Mock
 	private JwtUtils jwtUtils;
-
-	@Mock
-	private FindMemberPort findMemberPort;
 
 	@Mock
 	private SaveMemberPort saveMemberPort;
 
+	@Mock
+	private CreateAccountPort createAccountPort;
+
 	@InjectMocks
 	private RegisterMemberService registerMemberService;
-
-	@BeforeEach
-	void setup() {
-		ReflectionTestUtils.setField(registerMemberService, "secretKey", SECRET_KEY);
-	}
 
 	@Test
 	void successfulScenario() {
 		// given
 		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
 		given(MOCK_CLAIMS.getSubject()).willReturn(AUTH_KEY);
-		given(findMemberPort.invoke(any())).willReturn(Optional.empty());
-		given(passwordEncoder.encode(RAW_PASSWORD)).willReturn("encryptedPassword");
+		given(createAccountPort.invoke(any(CreateAccountPort.Command.class))).willReturn(CreateAccountPort.Result.builder().accountId(1L).build());
 
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
+			.encodedEncryptedPassword(ENCODED_ENCRYPTED_PASSWORD)
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();
@@ -84,26 +69,6 @@ class RegisterMemberServiceTest {
 	}
 
 	@Test
-	void failToValidateUsernameScenario() {
-		// given
-		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willReturn(MOCK_CLAIMS);
-		given(MOCK_CLAIMS.getSubject()).willReturn(AUTH_KEY);
-		given(findMemberPort.invoke(any())).willReturn(Optional.of(mock(Member.class)));
-
-		// when
-		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
-			.username(USERNAME)
-			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
-			.nickname("nickname")
-			.authToken(MOCK_AUTH_TOKEN)
-			.build();
-		final ThrowableAssert.ThrowingCallable throwingCallable = () -> registerMemberService.invoke(command);
-
-		// then
-		assertThatCode(throwingCallable).isInstanceOf(TiTiUserException.class);
-	}
-
-	@Test
 	void failToValidateAuthTokenScenario() {
 		// given
 		given(jwtUtils.getPayloads(MOCK_AUTH_TOKEN, UserConstants.AUTH_TOKEN)).willThrow(IllegalArgumentException.class);
@@ -111,7 +76,7 @@ class RegisterMemberServiceTest {
 		// when
 		final RegisterMemberUseCase.Command command = RegisterMemberUseCase.Command.builder()
 			.username(USERNAME)
-			.encodedEncryptedPassword(EncodedEncryptedPassword.builder().value(ENCODED_ENCRYPTED_PASSWORD).build())
+			.encodedEncryptedPassword(ENCODED_ENCRYPTED_PASSWORD)
 			.nickname("nickname")
 			.authToken(MOCK_AUTH_TOKEN)
 			.build();

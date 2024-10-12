@@ -4,7 +4,7 @@ import org.springframework.lang.Nullable;
 
 import lombok.Builder;
 
-import com.titi.titi_user.domain.member.EncodedEncryptedPassword;
+import com.titi.titi_auth.domain.EncodedEncryptedPassword;
 
 public interface LoginUseCase {
 

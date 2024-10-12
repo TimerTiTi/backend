@@ -1,11 +1,11 @@
-package com.titi.titi_user.adapter.out.internal;
+package com.titi.titi_user.adapter.out.auth;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
 import com.titi.titi_auth.application.port.in.GenerateAccessTokenUseCase;
-import com.titi.titi_user.application.port.out.internal.GenerateAccessTokenPort;
+import com.titi.titi_user.application.port.out.auth.GenerateAccessTokenPort;
 
 @Component
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.titi.titi_user.domain.member;
+package com.titi.titi_auth.domain;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
